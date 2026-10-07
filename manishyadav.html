@@ -1,0 +1,4031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manish Bank — Management System</title>
+    <style>
+        :root {
+            --primary: #1e40af;
+            --primary-hover: #1d4ed8;
+            --secondary: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --warning: #d97706;
+            --bg: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Header */
+        header {
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.2s;
+        }
+
+        .brand:hover {
+            transform: scale(1.02);
+        }
+
+        .brand-icon {
+            background: white;
+            color: #1e3a8a;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        .brand h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .brand span {
+            font-size: 0.8rem;
+            color: #bfdbfe;
+            display: block;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn-reset {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-reset:hover {
+            background: rgba(255, 255, 255, 0.28);
+            transform: translateY(-1px);
+        }
+
+        /* Navigation Bar */
+        nav {
+            background-color: white;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            padding: 0 2rem;
+            gap: 8px;
+            overflow-x: auto;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            padding: 14px 18px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-btn:hover {
+            color: var(--primary);
+            background-color: #f8fafc;
+        }
+
+        .nav-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            background-color: #eff6ff;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            width: 100%;
+            flex: 1;
+        }
+
+        /* Account Selector / Pill Filter Bar */
+        .account-selector-bar {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+            margin-bottom: 20px;
+        }
+
+        .selector-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .active-account-badge {
+            background: #e0f2fe;
+            color: #0369a1;
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid #bae6fd;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .account-pills-list {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            flex-wrap: wrap;
+        }
+
+        .account-pill {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            user-select: none;
+        }
+
+        .account-pill:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: #eff6ff;
+            transform: translateY(-1px);
+        }
+
+        .account-pill.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 10px rgba(30, 64, 175, 0.25);
+        }
+
+        .account-pill .pill-balance {
+            font-size: 0.8rem;
+            background: rgba(0,0,0,0.06);
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        .account-pill.active .pill-balance {
+            background: rgba(255,255,255,0.22);
+            color: white;
+        }
+
+        /* Selected Account Detail Banner */
+        .selected-account-banner {
+            background: linear-gradient(135deg, #eff6ff, #f0fdf4);
+            border: 1px solid #bfdbfe;
+            border-radius: var(--radius);
+            padding: 18px 22px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* Metric Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 18px 20px;
+            border-radius: var(--radius);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            user-select: none;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+            border-color: #cbd5e1;
+        }
+
+        .stat-info h3 {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .stat-info p {
+            font-size: 1.55rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .stat-sub {
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            display: block;
+            font-weight: 500;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover .stat-icon {
+            transform: scale(1.1);
+        }
+
+        .icon-blue { background: #dbeafe; color: #1d4ed8; }
+        .icon-green { background: #dcfce7; color: #15803d; }
+        .icon-red { background: #fee2e2; color: #b91c1c; }
+        .icon-purple { background: #f3e8ff; color: #7e22ce; }
+
+        /* Notification Toast/Alert */
+        #alertBox {
+            display: none;
+            padding: 14px 20px;
+            margin-bottom: 20px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 0.95rem;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .alert-success { background: #dcfce7; color: #14532d; border: 1px solid #86efac; }
+        .alert-error { background: #fee2e2; color: #7f1d1d; border: 1px solid #fca5a5; }
+        .alert-info { background: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; }
+
+        /* Content Sections */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Card Layout */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 24px;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .card-header h2 {
+            font-size: 1.25rem;
+            color: var(--text-main);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Forms */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .form-group input, 
+        .form-group select,
+        .form-group textarea {
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border 0.2s, box-shadow 0.2s;
+            background-color: white;
+            width: 100%;
+        }
+
+        .form-group input:focus, 
+        .form-group select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 11px 22px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            user-select: none;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-success { background-color: var(--success); }
+        .btn-success:hover { background-color: #15803d; }
+
+        .btn-danger { background-color: var(--danger); }
+        .btn-danger:hover { background-color: #b91c1c; }
+
+        .btn-secondary { background-color: #475569; }
+        .btn-secondary:hover { background-color: #334155; }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.82rem;
+            border-radius: 5px;
+        }
+
+        /* Transaction Mode Switcher */
+        .tx-mode-nav {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 22px;
+            background: #f1f5f9;
+            padding: 6px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+
+        .tx-mode-btn {
+            flex: 1;
+            min-width: 160px;
+            padding: 11px 18px;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            user-select: none;
+        }
+
+        .tx-mode-btn:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.7);
+        }
+
+        .tx-mode-btn.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--border);
+        }
+
+        /* Two Account Transfer Layout */
+        .two-accounts-container {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 16px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .two-accounts-container {
+                grid-template-columns: 1fr;
+            }
+            .transfer-arrow-col {
+                transform: rotate(90deg);
+                padding: 10px 0;
+            }
+        }
+
+        .account-card-box {
+            background: #f8fafc;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px;
+            transition: all 0.2s;
+        }
+
+        .account-card-box.sender-box {
+            border-color: #cbd5e1;
+            background: #f8fafc;
+        }
+
+        .account-card-box.receiver-box {
+            border-color: #bae6fd;
+            background: #f0f9ff;
+        }
+
+        .box-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+            letter-spacing: 0.5px;
+        }
+
+        .transfer-arrow-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .transfer-circle-arrow {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            box-shadow: 0 4px 12px rgba(30, 64, 175, 0.25);
+        }
+
+        .mini-account-card {
+            background: white;
+            border-radius: 10px;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            margin-top: 12px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        }
+
+        .transfer-summary-pill {
+            background: #eff6ff;
+            border-left: 4px solid var(--primary);
+            padding: 12px 18px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-bottom: 18px;
+            color: #1e3a8a;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .quick-amount-chips {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .chip-btn {
+            background: #e2e8f0;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 16px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #334155;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .chip-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Tables */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 12px 16px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 13px 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.92rem;
+            color: var(--text-main);
+        }
+
+        tr:hover {
+            background-color: #f8fafc;
+        }
+
+        tr.row-selected {
+            background-color: #eff6ff !important;
+            border-left: 4px solid var(--primary);
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .badge-credit { background: #dcfce7; color: #15803d; }
+        .badge-debit { background: #fee2e2; color: #b91c1c; }
+        .badge-transfer { background: #e0e7ff; color: #4338ca; }
+        .badge-savings { background: #fef3c7; color: #b45309; }
+        .badge-current { background: #e0f2fe; color: #0369a1; }
+
+        /* Counterparty / Transacted With Badges */
+        .party-badge {
+            display: inline-flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: 5px 9px;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            line-height: 1.25;
+            text-align: left;
+            min-width: 175px;
+            max-width: 250px;
+            box-sizing: border-box;
+        }
+        .party-to {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+        }
+        .party-to .party-direction {
+            font-size: 0.68rem;
+            font-weight: 800;
+            color: #dc2626;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .party-from {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+        }
+        .party-from .party-direction {
+            font-size: 0.68rem;
+            font-weight: 800;
+            color: #16a34a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .party-scanner {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+        }
+        .party-scanner .party-direction {
+            font-size: 0.68rem;
+            font-weight: 800;
+            color: #2563eb;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .party-self {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+        }
+        .party-self .party-direction {
+            font-size: 0.68rem;
+            font-weight: 800;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .party-name {
+            font-size: 0.86rem;
+            font-weight: 600;
+            color: #0f172a;
+        }
+        .party-acc {
+            font-size: 0.75rem;
+            font-family: monospace;
+            color: #475569;
+        }
+
+        /* Search & Filters */
+        .table-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 6px 12px;
+            flex: 1;
+            max-width: 380px;
+            gap: 8px;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            width: 100%;
+            padding: 4px;
+            font-size: 0.9rem;
+        }
+
+        /* Quick Action Cards in Dashboard */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .action-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            user-select: none;
+        }
+
+        .action-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+            border-color: var(--primary);
+        }
+
+        .action-card h4 {
+            font-size: 1.05rem;
+            margin-bottom: 6px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .action-card p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        /* Footer */
+        footer {
+            background: white;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            padding: 16px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: auto;
+        }
+
+        /* Google Pay & Scanner Styles */
+        .gpay-wrapper {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 24px;
+        }
+
+        .gpay-card {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gpay-badge-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .gpay-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: #3c4043;
+        }
+
+        .gpay-g {
+            font-size: 1.4rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #4285f4, #ea4335, #fbbc05, #34a853);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .upi-pill {
+            background: #f1f5f9;
+            color: #475569;
+            font-weight: 700;
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid #cbd5e1;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .qr-display-box {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            border-radius: 14px;
+            padding: 20px;
+            text-align: center;
+            margin: 16px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 250px;
+        }
+
+        .qr-image {
+            width: 190px;
+            height: 190px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            background: white;
+            padding: 8px;
+        }
+
+        .qr-amount-tag {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-top: 10px;
+        }
+
+        /* Scanner Viewfinder */
+        .scanner-viewport {
+            position: relative;
+            width: 100%;
+            max-width: 340px;
+            height: 240px;
+            background: #0f172a;
+            border-radius: 12px;
+            margin: 16px auto;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.6);
+        }
+
+        .scanner-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .scanner-frame {
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            border: 2px solid rgba(59, 130, 246, 0.6);
+            border-radius: 10px;
+            box-shadow: 0 0 0 1000px rgba(15, 23, 42, 0.5);
+            pointer-events: none;
+        }
+
+        .scanner-corners {
+            position: absolute;
+            inset: -2px;
+            pointer-events: none;
+        }
+        .scanner-corners::before, .scanner-corners::after {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            border-color: #22c55e;
+            border-style: solid;
+        }
+        .scanner-corners::before { top: 0; left: 0; border-width: 3px 0 0 3px; }
+        .scanner-corners::after { top: 0; right: 0; border-width: 3px 3px 0 0; }
+
+        .scanner-laser {
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #22c55e, #38bdf8, transparent);
+            box-shadow: 0 0 10px #22c55e;
+            animation: laserScan 2s infinite ease-in-out;
+        }
+
+        @keyframes laserScan {
+            0% { top: 10%; opacity: 0.3; }
+            50% { top: 85%; opacity: 1; }
+            100% { top: 10%; opacity: 0.3; }
+        }
+
+        .scanner-status {
+            font-size: 0.85rem;
+            color: #64748b;
+            text-align: center;
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        .scanner-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 14px;
+        }
+
+        /* Login & Create Account Overlay */
+        .auth-overlay {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 20% 20%, rgba(30, 58, 138, 0.96), rgba(15, 23, 42, 0.98));
+            backdrop-filter: blur(10px);
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-y: auto;
+            transition: opacity 0.3s ease;
+        }
+
+        .auth-card {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.15);
+            width: 100%;
+            max-width: 580px;
+            padding: 32px 36px;
+            margin: auto;
+            animation: authModalSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes authModalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(22px) scale(0.97);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .auth-brand-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 22px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .auth-logo-circle {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            color: white;
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+            flex-shrink: 0;
+        }
+
+        .auth-brand-header h2 {
+            font-size: 1.45rem;
+            color: #0f172a;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .auth-brand-header p {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin: 2px 0 0 0;
+        }
+
+        .auth-tabs {
+            display: flex;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 10px;
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+
+        .auth-tab-btn {
+            flex: 1;
+            padding: 10px 14px;
+            border: none;
+            background: transparent;
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #64748b;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .auth-tab-btn.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        .auth-welcome-text {
+            margin-bottom: 18px;
+        }
+
+        .auth-main-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .auth-welcome-text p {
+            font-size: 0.86rem;
+            color: var(--text-muted);
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .auth-submit-btn {
+            width: 100%;
+            padding: 13px;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-top: 18px;
+            border-radius: 10px;
+            box-shadow: 0 4px 14px rgba(22, 163, 74, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .quick-demo-login-box {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px dashed var(--border);
+        }
+
+        .demo-user-chip {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            padding: 10px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            width: 100%;
+            font-size: 0.88rem;
+        }
+
+        .demo-user-chip:hover {
+            background: #eff6ff;
+            border-color: #93c5fd;
+            transform: translateX(3px);
+        }
+
+        .auth-footer-note {
+            text-align: center;
+            font-size: 0.74rem;
+            color: #94a3b8;
+            margin-top: 18px;
+        }
+
+        .user-profile-badge {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+
+        .user-profile-badge:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .btn-outline-white {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-outline-white:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: white;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+            .nav-btn {
+                padding: 12px 14px;
+                font-size: 0.88rem;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Dedicated Login & Create Account Gate (Opens first before user enters portal) -->
+    <div id="loginAuthOverlay" class="auth-overlay" style="display: flex;">
+        <div class="auth-card">
+            <!-- Bank Brand Header -->
+            <div class="auth-brand-header">
+                <div class="auth-logo-circle">🏦</div>
+                <div>
+                    <h2>Hindustan Bank</h2>
+                    <p>Secure Core Digital Banking Gateway</p>
+                </div>
+            </div>
+
+            <!-- Mode Switcher Tabs: Create Account (Default) vs Sign In -->
+            <div class="auth-tabs">
+                <button type="button" id="tabBtnCreate" class="auth-tab-btn active" onclick="switchAuthMode('create')">
+                    📝 Create Your Account
+                </button>
+                <button type="button" id="tabBtnLogin" class="auth-tab-btn" onclick="switchAuthMode('login')">
+                    🔑 Sign In to Existing Account
+                </button>
+            </div>
+
+            <!-- VIEW 1: CREATE YOUR ACCOUNT (Active by default) -->
+            <div id="authCreateView" class="auth-view">
+                <div class="auth-welcome-text">
+                    <h3 class="auth-main-title">Create your account</h3>
+                    <p>Enter your details below to open an instant digital bank account and enter the banking portal.</p>
+                </div>
+
+                <form id="authCreateForm" onsubmit="handleAuthCreateAccount(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="authFullName">👤 Full Name *</label>
+                            <input type="text" id="authFullName" required placeholder="e.g. Manish Yadav">
+                        </div>
+                        <div class="form-group">
+                            <label for="authPhone">📱 Phone / Mobile Number *</label>
+                            <input type="tel" id="authPhone" required placeholder="10-digit mobile number" pattern="[0-9]{10}" maxlength="10">
+                        </div>
+                        <div class="form-group">
+                            <label for="authEmail">📧 Email Address</label>
+                            <input type="email" id="authEmail" placeholder="e.g. manish@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="authAccType">💳 Account Type *</label>
+                            <select id="authAccType" required>
+                                <option value="Savings">Savings Account</option>
+                                <option value="Current">Current / Business Account</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="authBranch">🏢 Home Branch *</label>
+                            <select id="authBranch" required>
+                                <option value="Main City Branch">Hindustan Branch</option>
+                            
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="authDeposit">💵 Initial Opening Deposit (₹) *</label>
+                            <input type="number" id="authDeposit" min="100" step="1" required value="5000" placeholder="Minimum ₹100">
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label for="authPin">🔒 Create 4-Digit Security PIN *</label>
+                        <input type="password" id="authPin" required placeholder="4-digit PIN for ATM & Login" pattern="[0-9]{4}" maxlength="4" style="letter-spacing: 4px;">
+                        <small style="color:var(--text-muted); font-size:0.78rem;">Used to verify transactions and login back anytime.</small>
+                    </div>
+
+                    <button type="submit" class="btn btn-success auth-submit-btn">
+                        🚀 Create Account & Enter Bank Portal
+                    </button>
+                </form>
+            </div>
+
+            <!-- VIEW 2: SIGN IN TO EXISTING ACCOUNT -->
+            <div id="authLoginView" class="auth-view" style="display:none;">
+                <div class="auth-welcome-text">
+                    <h3 class="auth-main-title">Sign In to Your Account</h3>
+                    <p>Select your bank account .</p>
+                </div>
+
+                <form id="authLoginForm" onsubmit="handleAuthLogin(event)">
+                    <div class="form-group">
+                        <label for="loginAccountSelect">Choose Account to Sign In *</label>
+                        <select id="loginAccountSelect" required onchange="onLoginAccountSelected()">
+                            <!-- Populated with accounts -->
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label for="loginPin">🔒 4-Digit Security PIN (Default: 1234)</label>
+                        <input type="password" id="loginPin" placeholder="Enter PIN (e.g. 1234)" maxlength="4" style="letter-spacing: 4px;">
+                    </div>
+
+                    <button type="submit" class="btn auth-submit-btn" style="background:var(--primary); color:white;">
+                        🔓 Sign In to Bank Account
+                    </button>
+                </form>
+
+                <!-- Quick 1-Click Demo Login Shortcuts -->
+                <div class="quick-demo-login-box">
+                    <span style="font-size:0.8rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:8px;">
+                        ⚡ 1-Click Instant Test Login:
+                    </span>
+                    <div id="demoLoginButtons" style="display:flex; flex-direction:column; gap:6px;">
+                        <!-- Injected by JS: 1-click login buttons for existing accounts -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="auth-footer-note">
+                🔒 256-Bit SSL Encrypted Banking • RBI Regulatory Compliant • Fast & Instant Setup
+            </div>
+        </div>
+    </div>
+
+    <!-- Dedicated Account Information & Balance Details Modal -->
+    <div id="accountInfoModal" class="auth-overlay" style="display: none;" onclick="closeAccountInfoModalOnOutsideClick(event)">
+        <div class="auth-card" style="max-width: 520px;" onclick="event.stopPropagation()">
+            <div class="auth-brand-header">
+                <div class="auth-logo-circle" style="background: linear-gradient(135deg, #16a34a, #22c55e);">
+                    👤
+                </div>
+                <div>
+                    <h2 id="modalAccHolderName">Account Details</h2>
+                    <p id="modalAccNumberSub">Account Holder Profile & Balance</p>
+                </div>
+                <button type="button" onclick="closeAccountInfoModal()" style="margin-left:auto; background:none; border:none; font-size:24px; cursor:pointer; color:#64748b; line-height:1;">&times;</button>
+            </div>
+
+            <!-- Balance Card -->
+            <div style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); border: 1px solid #bbf7d0; border-radius: 14px; padding: 18px 20px; margin-bottom: 20px; text-align: center;">
+                <span style="font-size: 0.8rem; font-weight: 700; color: #166534; text-transform: uppercase; letter-spacing: 0.5px;">Current Available Balance</span>
+                <div id="modalAccBalance" style="font-size: 2.1rem; font-weight: 900; color: #15803d; margin: 4px 0;">₹0.00</div>
+                <span id="modalAccTypeBadge" class="badge badge-savings" style="font-size: 0.8rem;">Savings Account</span>
+            </div>
+
+            <!-- Details Grid -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; font-size: 0.88rem;">
+                <div style="background: #f8fafc; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border);">
+                    <small style="color: var(--text-muted); display: block;">Account Number</small>
+                    <strong id="modalAccNumber" style="font-size: 1rem; color: #0f172a;">#---</strong>
+                </div>
+                <div style="background: #f8fafc; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border);">
+                    <small style="color: var(--text-muted); display: block;">Account Status</small>
+                    <strong id="modalAccStatus" style="color: var(--success); font-weight: 700;">Active</strong>
+                </div>
+                <div style="background: #f8fafc; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border);">
+                    <small style="color: var(--text-muted); display: block;">Mobile / Phone</small>
+                    <strong id="modalAccPhone">---</strong>
+                </div>
+                <div style="background: #f8fafc; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border);">
+                    <small style="color: var(--text-muted); display: block;">Home Branch</small>
+                    <strong id="modalAccBranch">---</strong>
+                </div>
+                <div style="background: #f8fafc; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border); grid-column: span 2;">
+                    <small style="color: var(--text-muted); display: block;">Registered Email</small>
+                    <strong id="modalAccEmail">---</strong>
+                </div>
+            </div>
+
+            <!-- Quick Action Buttons -->
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="button" class="btn btn-sm btn-success" onclick="modalAction('deposit')">💵 Deposit</button>
+                <button type="button" class="btn btn-sm btn-danger" onclick="modalAction('withdraw')">🏧 Withdraw</button>
+                <button type="button" class="btn btn-sm" style="background:#4285f4; color:white;" onclick="modalAction('transfer')">🔁 Transfer</button>
+                <button type="button" class="btn btn-sm btn-secondary" onclick="modalAction('statement')">📜 Statement</button>
+                <button type="button" class="btn btn-sm" style="background:#64748b; color:white;" onclick="closeAccountInfoModal()">✕ Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🔐 PIN Verification Modal - Required before opening any account -->
+    <div id="pinVerifyModal" class="auth-overlay" style="display: none;" onclick="closePinModalOnOutsideClick(event)">
+        <div class="auth-card" style="max-width: 400px; text-align: center;" onclick="event.stopPropagation()">
+            <div class="auth-brand-header" style="justify-content: center; flex-direction: column; align-items: center; gap: 8px;">
+                <div class="auth-logo-circle" style="background: linear-gradient(135deg, #dc2626, #f97316); font-size: 28px;">
+                    🔐
+                </div>
+                <div style="text-align: center;">
+                    <h2 style="margin: 0; font-size: 1.2rem; color: #0f172a;">Enter Security PIN</h2>
+                    <p id="pinModalAccLabel" style="margin: 4px 0 0; font-size: 0.85rem; color: var(--text-muted);">Verify your identity to access this account</p>
+                </div>
+            </div>
+
+            <!-- Account name display -->
+            <div id="pinModalAccInfo" style="background: #f1f5f9; border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; margin-bottom: 18px; display: flex; align-items: center; gap: 10px;">
+                <div style="background: #dbeafe; color: #1e40af; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; flex-shrink: 0;">👤</div>
+                <div style="text-align: left;">
+                    <strong id="pinModalAccName" style="color: #0f172a; font-size: 0.95rem;">Account Holder</strong>
+                    <div id="pinModalAccNum" style="font-size: 0.78rem; color: var(--text-muted);">Account #---</div>
+                </div>
+            </div>
+
+            <!-- PIN Input -->
+            <div style="margin-bottom: 18px;">
+                <label style="display: block; text-align: left; font-size: 0.82rem; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
+                    🔑 4-Digit Security PIN
+                </label>
+                <div style="display: flex; justify-content: center; gap: 10px;">
+                    <input type="password" id="pinInput1" class="auth-input" maxlength="1" inputmode="numeric" pattern="[0-9]"
+                        style="width: 52px; height: 58px; text-align: center; font-size: 1.5rem; font-weight: 900; letter-spacing: 2px; border-radius: 12px; border: 2px solid var(--border);"
+                        oninput="onPinDigitInput(this, 'pinInput2')" onkeydown="onPinDigitKeydown(event, this, null)" autofocus>
+                    <input type="password" id="pinInput2" class="auth-input" maxlength="1" inputmode="numeric" pattern="[0-9]"
+                        style="width: 52px; height: 58px; text-align: center; font-size: 1.5rem; font-weight: 900; letter-spacing: 2px; border-radius: 12px; border: 2px solid var(--border);"
+                        oninput="onPinDigitInput(this, 'pinInput3')" onkeydown="onPinDigitKeydown(event, this, 'pinInput1')">
+                    <input type="password" id="pinInput3" class="auth-input" maxlength="1" inputmode="numeric" pattern="[0-9]"
+                        style="width: 52px; height: 58px; text-align: center; font-size: 1.5rem; font-weight: 900; letter-spacing: 2px; border-radius: 12px; border: 2px solid var(--border);"
+                        oninput="onPinDigitInput(this, 'pinInput4')" onkeydown="onPinDigitKeydown(event, this, 'pinInput2')">
+                    <input type="password" id="pinInput4" class="auth-input" maxlength="1" inputmode="numeric" pattern="[0-9]"
+                        style="width: 52px; height: 58px; text-align: center; font-size: 1.5rem; font-weight: 900; letter-spacing: 2px; border-radius: 12px; border: 2px solid var(--border);"
+                        oninput="onPinDigitInput(this, null)" onkeydown="onPinDigitKeydown(event, this, 'pinInput3')">
+                </div>
+                <div id="pinErrorMsg" style="color: var(--danger); font-size: 0.82rem; margin-top: 8px; display: none; font-weight: 600;">
+                    ❌ Incorrect PIN! Please try again.
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="display: flex; gap: 10px;">
+                <button type="button" class="btn btn-sm" style="flex: 1; background: #64748b; color: white; padding: 12px;" onclick="closePinModal()">
+                    ✕ Cancel
+                </button>
+                <button type="button" id="pinVerifyBtn" class="btn btn-sm" style="flex: 2; background: linear-gradient(135deg, #16a34a, #22c55e); color: white; padding: 12px; font-weight: 700; font-size: 0.95rem;" onclick="verifyEnteredPin()">
+                    🔓 Unlock Account
+                </button>
+            </div>
+
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 14px;">
+                🔒 Your PIN is encrypted &amp; never shared. This is the same PIN you set during account registration.
+            </p>
+        </div>
+    </div>
+
+    <!-- Header Section -->
+    <header>
+        <div class="brand" onclick="switchTab('dashboard')" title="Click to go to Dashboard">
+            <div class="brand-icon">🏦</div>
+            <div>
+                <h1>Hindustan Bank</h1>
+                <span>Digital Core Banking Portal</span>
+            </div>
+        </div>
+        <div class="header-actions" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+            <div id="headerUserProfile" class="user-profile-badge" onclick="openAccountInfoModal()" title="Click to view full account details and amount">
+                <span>👤</span> <strong>Select Account</strong>
+            </div>
+            <button class="btn-outline-white" onclick="showAuthOverlay('create')" title="Register another account">➕ New Account</button>
+            <button class="btn-outline-white" onclick="showAuthOverlay('login')" title="Switch to another existing account">🚪 Switch User</button>
+            <button class="btn-reset" onclick="resetDemoData()" title="Reset data to defaults">↺ Reset Demo</button>
+        </div>
+    </header>
+
+    <!-- Navigation Menu -->
+    <nav>
+        <button class="nav-btn active" onclick="switchTab('dashboard')">📊 Dashboard</button>
+        <button class="nav-btn" onclick="switchTab('openAccount')">➕ Open Account</button>
+        <button class="nav-btn" onclick="switchTab('transactions')">💳 Deposit / Withdraw / Transfer</button>
+        <button class="nav-btn" onclick="switchTab('gpayScanner')">📱 Google Pay & Scanner</button>
+        <button class="nav-btn" onclick="switchTab('accountsList')">👥 View All Accounts</button>
+        <button class="nav-btn" onclick="switchTab('statement')">📜 Transaction History</button>
+    </nav>
+
+    <!-- Main Content Container -->
+    <div class="container">
+
+        <!-- Global Alert Message -->
+        <div id="alertBox">
+            <span id="alertMessage"></span>
+            <button onclick="hideAlert()" style="background:none; border:none; font-size:20px; cursor:pointer; line-height:1;">&times;</button>
+        </div>
+
+        <!-- Account Focus Switcher Bar -->
+        <div class="account-selector-bar">
+            <div class="selector-header">
+                <span style="font-weight:700; color:var(--text-main); font-size:0.95rem; display:flex; align-items:center; gap:8px;">
+                    <span>👤</span> Select Single Account to Filter All Data:
+                </span>
+                <span id="activeAccountBadge" class="active-account-badge">🌐 Viewing All Accounts (Global View)</span>
+            </div>
+            <div class="account-pills-list" id="accountPillsContainer">
+                <!-- Dynamically populated with pills: All Accounts, #1001, #1002, ... -->
+            </div>
+        </div>
+
+        <!-- Metric Cards (Dynamically Filtered for Clicked Single Account or All Accounts) -->
+        <div class="stats-grid">
+            <div class="stat-card" onclick="handleCardClick('balance')" title="Click to view details">
+                <div class="stat-info">
+                    <h3 id="statLabel1">Total Deposits</h3>
+                    <p id="statTotalBalance">₹0.00</p>
+                    <span id="statSub1" class="stat-sub">Across all accounts</span>
+                </div>
+                <div class="stat-icon icon-blue">💰</div>
+            </div>
+
+            <div class="stat-card" onclick="handleCardClick('accounts')" title="Click to manage accounts">
+                <div class="stat-info">
+                    <h3 id="statLabel2">Active Accounts</h3>
+                    <p id="statAccountCount">0</p>
+                    <span id="statSub2" class="stat-sub">Savings & Current</span>
+                </div>
+                <div class="stat-icon icon-purple">👥</div>
+            </div>
+
+            <div class="stat-card" onclick="handleCardClick('inflow')" title="Click to view Credits & Deposits">
+                <div class="stat-info">
+                    <h3 id="statLabel3">Total Inflow</h3>
+                    <p id="statTotalCredit">₹0.00</p>
+                    <span id="statSub3" class="stat-sub">All deposits received</span>
+                </div>
+                <div class="stat-icon icon-green">⬆️</div>
+            </div>
+
+            <div class="stat-card" onclick="handleCardClick('outflow')" title="Click to view Debits & Withdrawals">
+                <div class="stat-info">
+                    <h3 id="statLabel4">Total Outflow</h3>
+                    <p id="statTotalDebit">₹0.00</p>
+                    <span id="statSub4" class="stat-sub">All withdrawals made</span>
+                </div>
+                <div class="stat-icon icon-red">⬇️</div>
+            </div>
+        </div>
+
+        <!-- TAB 1: DASHBOARD -->
+        <div id="dashboard" class="tab-content active">
+
+            <!-- Single Account Info Banner (Displayed when an account is clicked/selected) -->
+            <div id="selectedAccountBanner" style="display:none;"></div>
+
+            <h2 style="margin-bottom: 16px; font-size: 1.25rem;">⚡ Quick Banking Operations</h2>
+            <div class="quick-actions">
+                <div class="action-card" onclick="switchTab('openAccount')">
+                    <h4>➕ Open New Account</h4>
+                    <p>Create a savings or current account for a new customer.</p>
+                </div>
+                <div class="action-card" onclick="prepareTransaction('deposit')">
+                    <h4>💵 Deposit Funds</h4>
+                    <p>Add cash or digital credit into an existing account.</p>
+                </div>
+                <div class="action-card" onclick="prepareTransaction('withdraw')">
+                    <h4>🏧 Withdraw Funds</h4>
+                    <p>Debit cash safely with balance verification.</p>
+                </div>
+                <div class="action-card" onclick="prepareTransaction('transfer')">
+                    <h4>🔁 Fund Transfer</h4>
+                    <p>Transfer balance instantly between two customer accounts.</p>
+                </div>
+                <div class="action-card" onclick="switchTab('gpayScanner')" style="border-left: 4px solid #4285f4;">
+                    <h4>📱 GPay & Scanner</h4>
+                    <p>Take deposits via live camera scanner or dynamic Google Pay QR.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 id="recentTxTitle">🕒 Recent Transactions</h2>
+                    <button class="btn btn-sm" onclick="switchTab('statement')">View Full Statement →</button>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Txn ID</th>
+                                <th>Date & Time</th>
+                                <th>Account</th>
+                                <th>Transacted </th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Balance After</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentTransactionsTable">
+                            <!-- Injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: OPEN ACCOUNT -->
+        <div id="openAccount" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h2>➕ Open a New Bank Account</h2>
+                </div>
+                <form id="createAccountForm" onsubmit="handleCreateAccount(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="accName">Full Name *</label>
+                            <input type="text" id="accName" required placeholder="e.g. John Doe">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="accEmail">Email Address</label>
+                            <input type="email" id="accEmail" placeholder="john@example.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="accPhone">Phone Number *</label>
+                            <input type="tel" id="accPhone" required placeholder="e.g. 9876543210">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="accType">Account Type *</label>
+                            <select id="accType" required>
+                                <option value="Savings">Savings Account</option>
+                                <option value="Current">Current / Checking Account</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="accInitialDeposit">Initial Opening Balance (₹) *</label>
+                            <input type="number" id="accInitialDeposit" min="100" step="0.01" required placeholder="Min. ₹500.00">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="accBranch">Branch</label>
+                            <select id="accBranch">
+                                <option value="Main Central Branch">Hindustan Branch</option>
+                                
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 10px; display:flex; gap:10px;">
+                        <button type="submit" class="btn btn-success">✅ Open Account</button>
+                        <button type="reset" class="btn btn-secondary">Clear Form</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- TAB 3: TRANSACTIONS (DEPOSIT / WITHDRAW / TRANSFER WITH 2 ACCOUNTS) -->
+        <div id="transactions" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h2>💳 Banking Operations & Money Transfer</h2>
+                    <span id="txModeBadge" style="font-size:0.85rem; font-weight:700; color:var(--primary); background:#eff6ff; padding:4px 12px; border-radius:14px; border:1px solid #bfdbfe;">
+                        🔁 Mode: Transfer
+                    </span>
+                </div>
+
+                <!-- 3 Mode Navigation Buttons -->
+                <div class="tx-mode-nav">
+                    <button type="button" id="btnModeDeposit" class="tx-mode-btn" onclick="setTransactionMode('deposit')">
+                        💵 Deposit Funds
+                    </button>
+                    <button type="button" id="btnModeWithdraw" class="tx-mode-btn" onclick="setTransactionMode('withdraw')">
+                        🏧 Withdraw Funds
+                    </button>
+                    <button type="button" id="btnModeTransfer" class="tx-mode-btn active" onclick="setTransactionMode('transfer')">
+                        🔁 Transfer Between Accounts
+                    </button>
+                </div>
+
+                <!-- PANEL 1: TWO-ACCOUNT TRANSFER PANEL -->
+                <div id="panelTransfer">
+                    <form id="transferForm" onsubmit="handleTransferSubmit(event)">
+                        
+                        <!-- The 2-Account Selector & Cards View -->
+                        <div class="two-accounts-container">
+                            
+                            <!-- Account 1: Source / Sender Account -->
+                            <div class="account-card-box sender-box">
+                                <div class="box-badge">📤 1. SENDER ACCOUNT (DEBITED)</div>
+                                <div class="form-group" style="margin-top:12px; margin-bottom:8px;">
+                                    <label for="transferFromSelect">Your Selected Account (From) *</label>
+                                    <select id="transferFromSelect" onchange="onTransferSenderChanged()" required>
+                                        <!-- Dynamically populated with accounts -->
+                                    </select>
+                                </div>
+                                <div id="senderAccountCard" class="mini-account-card">
+                                    <!-- Injected by JS: Sender details, balance, etc. -->
+                                </div>
+                            </div>
+
+                            <!-- Middle Transfer Arrow -->
+                            <div class="transfer-arrow-col">
+                                <div class="transfer-circle-arrow">⇄</div>
+                                <span style="font-size:0.75rem; font-weight:800; color:var(--text-muted); text-transform:uppercase;">Transfer To</span>
+                            </div>
+
+                            <!-- Account 2: Destination / Receiver Account -->
+                            <div class="account-card-box receiver-box">
+                                <div class="box-badge" style="background:#e0f2fe; color:#0369a1; border-color:#bae6fd;">📥 2. RECIPIENT ACCOUNT (CREDITED)</div>
+                                <div class="form-group" style="margin-top:12px; margin-bottom:8px;">
+                                    <label for="transferToSelect">Choose Recipient from Account List (To) *</label>
+                                    <select id="transferToSelect" onchange="onTransferReceiverChanged()" required>
+                                        <!-- Dynamically populated with all other accounts EXCEPT sender -->
+                                    </select>
+                                </div>
+                                <div id="receiverAccountCard" class="mini-account-card">
+                                    <!-- Injected by JS: Receiver details, balance, etc. -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Real-Time Transfer Summary Bar -->
+                        <div id="transferSummaryPill" class="transfer-summary-pill">
+                            <span>Ready to transfer funds between selected accounts</span>
+                            <span id="transferLiveAmount" style="font-weight:700; color:var(--primary);">Amount: ₹0.00</span>
+                        </div>
+
+                        <!-- Amount & Remarks -->
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="transferAmount">Transfer Amount (₹) *</label>
+                                <input type="number" id="transferAmount" min="1" step="0.01" required placeholder="0.00" oninput="onTransferAmountInput()">
+                                <div class="quick-amount-chips">
+                                    <button type="button" class="chip-btn" onclick="quickAddTransferAmount(500)">+₹500</button>
+                                    <button type="button" class="chip-btn" onclick="quickAddTransferAmount(1000)">+₹1,000</button>
+                                    <button type="button" class="chip-btn" onclick="quickAddTransferAmount(2000)">+₹2,000</button>
+                                    <button type="button" class="chip-btn" onclick="quickAddTransferAmount(5000)">+₹5,000</button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="transferRemarks">Description / Purpose</label>
+                                <input type="text" id="transferRemarks" placeholder="e.g. Rent, Bill split, Business payment">
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 14px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+                            <button type="submit" class="btn btn-success" style="padding:12px 28px; font-size:1rem;">
+                                🔁 Confirm & Transfer Money Now
+                            </button>
+                            <button type="button" class="btn" style="background:#4285f4;" onclick="switchTab('gpayScanner')">
+                                📱 Or Pay via Google Pay QR →
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- PANEL 2: SINGLE-ACCOUNT DEPOSIT & WITHDRAW PANEL -->
+                <div id="panelSingleAccount" style="display:none;">
+                    <form id="singleAccountForm" onsubmit="handleSingleAccountSubmit(event)">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label id="singleAccountLabel" for="singleAccountSelect">Account *</label>
+                                <select id="singleAccountSelect" onchange="onSingleAccountChanged()" required>
+                                    <!-- Populated with accounts -->
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="singleAmount">Amount (₹) *</label>
+                                <input type="number" id="singleAmount" min="1" step="0.01" required placeholder="0.00">
+                                <div class="quick-amount-chips">
+                                    <button type="button" class="chip-btn" onclick="quickAddSingleAmount(500)">+₹500</button>
+                                    <button type="button" class="chip-btn" onclick="quickAddSingleAmount(1000)">+₹1,000</button>
+                                    <button type="button" class="chip-btn" onclick="quickAddSingleAmount(2000)">+₹2,000</button>
+                                    <button type="button" class="chip-btn" onclick="quickAddSingleAmount(5000)">+₹5,000</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Live Single Account Card -->
+                        <div id="singleAccountCard" class="mini-account-card" style="margin-bottom:16px;">
+                            <!-- Injected by JS -->
+                        </div>
+
+                        <div class="form-group">
+                            <label for="singleRemarks">Remarks / Notes</label>
+                            <input type="text" id="singleRemarks" placeholder="e.g. Cash Deposit, ATM Withdrawal">
+                        </div>
+
+                        <div style="margin-top: 14px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+                            <button type="submit" id="btnSingleSubmit" class="btn btn-success" style="padding:12px 28px; font-size:1rem;">
+                                💵 Confirm Deposit
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="setTransactionMode('transfer')">
+                                🔁 Switch to Transfer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- TAB 4: GOOGLE PAY & SCANNER DEPOSIT -->
+        <div id="gpayScanner" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <div style="display:flex; align-items:center; gap: 10px;">
+                        <span style="font-size:28px;">📱</span>
+                        <div>
+                            <h2>Google Pay & QR Scanner Gateway</h2>
+                            <small style="color:var(--text-muted); font-size:0.85rem;">Take deposits using live camera scanner or dynamic Google Pay UPI QR code</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gpay-wrapper">
+                    <!-- Section 1: Live QR Scanner to Take Amount -->
+                    <div class="gpay-card">
+                        <div class="gpay-badge-header">
+                            <div class="gpay-logo">
+                                <span class="gpay-g">G</span><span>Pay</span>
+                                <span style="font-size: 0.85rem; color:#64748b; font-weight: normal;">• QR Scanner</span>
+                            </div>
+                            <span class="upi-pill">📷 Live Camera Scanner</span>
+                        </div>
+
+                        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom: 12px;">
+                            Point your device camera at a Google Pay / UPI QR or run instant test scan to credit deposit amount.
+                        </p>
+
+                        <!-- Camera Scanner Viewport -->
+                        <div class="scanner-viewport" id="scannerViewport">
+                            <video id="scannerVideo" class="scanner-video" autoplay playsinline muted></video>
+                            <div class="scanner-frame">
+                                <div class="scanner-corners"></div>
+                                <div class="scanner-laser"></div>
+                            </div>
+                            <div id="scannerOverlayMessage" style="position: absolute; color: white; text-align: center; font-size: 0.85rem; padding: 12px; background: rgba(15,23,42,0.85); border-radius: 8px; backdrop-filter: blur(2px);">
+                                📷 Camera inactive<br>
+                                <button type="button" class="btn btn-sm btn-success" onclick="toggleCameraScanner()" style="margin-top:8px;">Start Camera</button>
+                            </div>
+                        </div>
+                        <div id="scannerStatus" class="scanner-status">Status: Ready to scan QR code</div>
+
+                        <div class="form-group" style="margin-top: 14px;">
+                            <label for="scannerTargetAccount">Credit Into Account *</label>
+                            <select id="scannerTargetAccount" required>
+                                <option value="">-- Choose Account to Credit --</option>
+                            </select>
+                        </div>
+
+                        <div class="scanner-actions">
+                            <button type="button" class="btn btn-sm" id="btnToggleCam" onclick="toggleCameraScanner()">📷 Start Camera</button>
+                            <label class="btn btn-sm btn-secondary" style="cursor:pointer;">
+                                📂 Upload QR Image
+                                <input type="file" id="qrFileInput" accept="image/*" style="display:none;" onchange="handleQrFileUpload(event)">
+                            </label>
+                        </div>
+
+                        <div style="margin-top: 18px; border-top: 1px dashed var(--border); padding-top: 14px;">
+                            <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Quick Scanner Simulation (Instant Test):</label>
+                            <div style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;">
+                                <button type="button" class="btn btn-sm btn-success" onclick="simulateGpayScan(500)">Scan ₹500</button>
+                                <button type="button" class="btn btn-sm btn-success" onclick="simulateGpayScan(1000)">Scan ₹1,000</button>
+                                <button type="button" class="btn btn-sm btn-success" onclick="simulateGpayScan(2000)">Scan ₹2,000</button>
+                                <button type="button" class="btn btn-sm btn-secondary" onclick="promptCustomScan()">Scan Custom ₹</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 2: Dynamic Google Pay QR Generator (Customer Scans This) -->
+                    <div class="gpay-card">
+                        <div class="gpay-badge-header">
+                            <div class="gpay-logo">
+                                <span class="gpay-g">G</span><span>Pay</span>
+                                <span style="font-weight: 600; color:#1e293b; font-size:1rem;">Generate QR</span>
+                            </div>
+                            <span class="upi-pill">UPI / BHIM</span>
+                        </div>
+
+                        <form id="gpayGenerateForm" onsubmit="generateGpayQR(event)">
+                            <div class="form-group">
+                                <label for="gpayAccount">Select Account to Deposit Into *</label>
+                                <select id="gpayAccount" required>
+                                    <option value="">-- Choose Account --</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="gpayAmount">Deposit Amount (₹) *</label>
+                                <input type="number" id="gpayAmount" min="1" step="0.01" required placeholder="e.g. 1500.00">
+                            </div>
+
+                            <button type="submit" class="btn" style="width: 100%; background: #1a73e8;">
+                                ⚡ Generate Google Pay QR Code
+                            </button>
+                        </form>
+
+                        <!-- Dynamic QR Preview Box -->
+                        <div id="gpayQrContainer" class="qr-display-box" style="margin-top: 14px;">
+                            <div id="qrPlaceholder" style="color:var(--text-muted); font-size:0.9rem;">
+                                <span style="font-size:36px; display:block; margin-bottom:8px;">📲</span>
+                                Enter an amount above and click Generate to produce customer's Google Pay QR.
+                            </div>
+                            <div id="qrActiveView" style="display:none; width: 100%;">
+                                <img id="gpayQrImage" class="qr-image" src="" alt="Google Pay QR Code">
+                                <div class="qr-amount-tag" id="qrAmountDisplay">₹0.00</div>
+                                <div style="font-size:0.82rem; color:#475569; margin-top:4px;">
+                                    UPI ID: <strong id="qrUpiText">manishbank@okaxis</strong>
+                                </div>
+                                <div style="margin-top: 14px;">
+                                    <button type="button" class="btn btn-sm btn-success" onclick="simulateGPayCustomerPayment()">
+                                        ✅ Simulate Customer Scanned & Paid
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: VIEW ALL ACCOUNTS -->
+        <div id="accountsList" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h2>👥 Registered Bank Accounts</h2>
+                </div>
+
+                <div class="table-toolbar">
+                    <div class="search-box">
+                        <span>🔍</span>
+                        <input type="text" id="accountSearchInput" placeholder="Search by name, account #, phone..." oninput="filterAccounts()">
+                    </div>
+                    <div>
+                        <button class="btn btn-sm btn-success" onclick="switchTab('openAccount')">+ Open New Account</button>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Account No</th>
+                                <th>Account Holder</th>
+                                <th>Type</th>
+                                <th>Phone</th>
+                                <th>Balance</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="accountsTableBody">
+                            <!-- Injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 6: TRANSACTION HISTORY / STATEMENT -->
+        <div id="statement" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h2>📜 Account Statements & Transaction Logs</h2>
+                    <div style="display:flex; gap:8px;">
+                        <button class="btn btn-sm btn-secondary" onclick="exportStatementCSV()">📥 Export CSV</button>
+                        <button class="btn btn-sm" onclick="window.print()">🖨️ Print Statement</button>
+                    </div>
+                </div>
+
+                <div class="table-toolbar">
+                    <div class="search-box">
+                        <span>🔍</span>
+                        <input type="text" id="txSearchInput" placeholder="Search transaction ID, account #, remarks..." oninput="filterTransactions()">
+                    </div>
+                    <div style="display:flex; gap: 8px;">
+                        <select id="txFilterType" onchange="filterTransactions()" style="padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; font-weight:600;">
+                            <option value="ALL">All Types</option>
+                            <option value="DEPOSIT">Deposits Only</option>
+                            <option value="WITHDRAW">Withdrawals Only</option>
+                            <option value="TRANSFER">Transfers Only</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Txn ID</th>
+                                <th>Date & Time</th>
+                                <th>Account</th>
+                                <th>Transacted </th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Balance After</th>
+                                <th>Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody id="statementTableBody">
+                            <!-- Injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Manish Bank Management System • Complete Interactive Banking Portal</p>
+    </footer>
+
+    <!-- JavaScript Application Backend & UI Engine -->
+    <script>
+        // Storage Keys - v3 starts completely fresh with 0 pre-seeded accounts
+        const STORAGE_KEY_ACCOUNTS = "bank_accounts_data_v3";
+        const STORAGE_KEY_TXNS = "bank_transactions_data_v3";
+        const STORAGE_KEY_SESSION = "bank_current_session_user_v3";
+
+        // Initial Data - Empty (No pre-existing dummy accounts; accounts are 100% user-created)
+        const DEFAULT_ACCOUNTS = [];
+        const DEFAULT_TXNS = [];
+
+        // Global In-Memory State
+        let accounts = [];
+        let transactions = [];
+        let selectedAccountNum = null; // null = View All Accounts; string (e.g. '1001') = Single Account Mode
+        let currentSessionUser = null; // Currently logged-in account object
+        let currentTxMode = "transfer"; // 'deposit', 'withdraw', or 'transfer'
+        let alertTimeout = null;
+
+        function getNextAccountNumber() {
+            if (!accounts || accounts.length === 0) return "1001";
+            const maxNum = accounts.reduce((max, a) => {
+                const n = parseInt(a.accountNumber, 10);
+                return isNaN(n) ? max : Math.max(max, n);
+            }, 1000);
+            return (maxNum + 1).toString();
+        }
+
+        // ================= UTILITY HELPERS =================
+        function formatCurrency(val) {
+            const num = Number(val) || 0;
+            return "₹" + num.toLocaleString('en-IN', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function showAlert(msg, type = "success") {
+            const box = document.getElementById('alertBox');
+            const messageSpan = document.getElementById('alertMessage');
+            if (!box || !messageSpan) return;
+
+            clearTimeout(alertTimeout);
+            box.className = "";
+            box.classList.add(type === "error" ? "alert-error" : (type === "info" ? "alert-info" : "alert-success"));
+            messageSpan.innerHTML = msg;
+            box.style.display = "flex";
+
+            alertTimeout = setTimeout(() => {
+                hideAlert();
+            }, 4500);
+        }
+
+        function hideAlert() {
+            const box = document.getElementById('alertBox');
+            if (box) box.style.display = "none";
+        }
+
+        // Audio Beep Feedback using Web Audio API
+        function playBeepSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = "sine";
+                osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(1320, audioCtx.currentTime + 0.12);
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.18);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.18);
+            } catch (e) {
+                console.log("Audio feedback note:", e);
+            }
+        }
+
+        // ================= LOGIN & CREATE ACCOUNT GATEWAY ENGINE =================
+        function showAuthOverlay(mode = 'create') {
+            const overlay = document.getElementById('loginAuthOverlay');
+            if (overlay) {
+                overlay.style.display = 'flex';
+                switchAuthMode(mode);
+            }
+        }
+
+        function hideAuthOverlay() {
+            const overlay = document.getElementById('loginAuthOverlay');
+            if (overlay) {
+                overlay.style.display = 'none';
+            }
+        }
+
+        function switchAuthMode(mode) {
+            const createView = document.getElementById('authCreateView');
+            const loginView = document.getElementById('authLoginView');
+            const tabCreate = document.getElementById('tabBtnCreate');
+            const tabLogin = document.getElementById('tabBtnLogin');
+
+            if (mode === 'create') {
+                if (createView) createView.style.display = 'block';
+                if (loginView) loginView.style.display = 'none';
+                if (tabCreate) tabCreate.classList.add('active');
+                if (tabLogin) tabLogin.classList.remove('active');
+            } else {
+                if (createView) createView.style.display = 'none';
+                if (loginView) loginView.style.display = 'block';
+                if (tabCreate) tabCreate.classList.remove('active');
+                if (tabLogin) tabLogin.classList.add('active');
+                populateAuthLoginData();
+            }
+        }
+
+        function populateAuthLoginData() {
+            const select = document.getElementById('loginAccountSelect');
+            const demoContainer = document.getElementById('demoLoginButtons');
+
+            if (select) {
+                if (!accounts || accounts.length === 0) {
+                    select.innerHTML = '<option value="">-- No accounts registered yet. Please create your account above! --</option>';
+                } else {
+                    select.innerHTML = accounts.map(acc => `
+                        <option value="${acc.accountNumber}" ${selectedAccountNum === acc.accountNumber ? 'selected' : ''}>
+                            #${acc.accountNumber} - ${acc.name} (${acc.type})
+                        </option>
+                    `).join('');
+                }
+            }
+
+            if (demoContainer) {
+                if (!accounts || accounts.length === 0) {
+                    demoContainer.innerHTML = `
+                        <div style="padding:14px; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:10px; text-align:center; color:var(--text-muted); font-size:0.85rem;">
+                            No existing accounts found yet.<br>
+                            <button type="button" class="btn btn-sm btn-success" onclick="switchAuthMode('create')" style="margin-top:8px;">
+                                📝 Click to Create Your Account
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    demoContainer.innerHTML = accounts.map(acc => `
+                        <div class="demo-user-chip" onclick="quickDemoLogin('${acc.accountNumber}')" title="Click to log in as ${escapeHtml(acc.name)}">
+                            <div>
+                                <strong>👤 ${escapeHtml(acc.name)}</strong>
+                                <div style="font-size:0.75rem; color:var(--text-muted);">Account #${acc.accountNumber} • ${acc.type} • ${acc.branch}</div>
+                            </div>
+                            <div style="text-align:right;">
+                                <span style="font-size:0.75rem; background:#16a34a; color:white; padding:4px 10px; border-radius:6px; font-weight:600; display:inline-block;">🔑 Instant Login</span>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+        }
+
+        function onLoginAccountSelected() {
+            const pinInput = document.getElementById('loginPin');
+            if (pinInput) pinInput.value = '';
+        }
+
+        function handleAuthCreateAccount(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('authFullName').value.trim();
+            const phone = document.getElementById('authPhone').value.trim();
+            const email = document.getElementById('authEmail').value.trim();
+            const type = document.getElementById('authAccType').value;
+            const branch = document.getElementById('authBranch').value;
+            const deposit = parseFloat(document.getElementById('authDeposit').value);
+            const pin = document.getElementById('authPin').value.trim();
+
+            if (!name) {
+                showAlert("Please enter your full name.", "error");
+                return;
+            }
+            if (!phone || phone.length < 10) {
+                showAlert("Please enter a valid 10-digit mobile number.", "error");
+                return;
+            }
+            if (isNaN(deposit) || deposit < 100) {
+                showAlert("Initial opening deposit must be at least ₹100.", "error");
+                return;
+            }
+            if (!pin || pin.length !== 4) {
+                showAlert("Please enter a 4-digit security PIN.", "error");
+                return;
+            }
+
+            // Sequential account number starting with 1001 for the first user
+            const nextAccNum = getNextAccountNumber();
+
+            const newAccount = {
+                accountNumber: nextAccNum,
+                name: name,
+                email: email || `${name.toLowerCase().replace(/[^a-z]/g, '')}@example.com`,
+                phone: phone,
+                type: type,
+                balance: deposit,
+                branch: branch,
+                pin: pin,
+                status: "Active"
+            };
+
+            accounts.push(newAccount);
+            saveAccounts();
+
+            // Initial Opening Deposit Transaction Record
+            const txnId = "TXN" + Math.floor(10000 + Math.random() * 90000);
+            const newTxn = {
+                id: txnId,
+                accountNumber: nextAccNum,
+                type: "DEPOSIT",
+                amount: deposit,
+                balanceAfter: deposit,
+                date: new Date().toLocaleString('en-IN'),
+                partyAccount: nextAccNum,
+                partyName: name,
+                partyRole: "OPENING",
+                description: "Account Opening Initial Deposit"
+            };
+
+            transactions.unshift(newTxn);
+            saveTransactions();
+
+            // Reset form
+            document.getElementById('authCreateForm').reset();
+
+            // Automatically log in as this new user
+            loginAsUser(newAccount, false);
+
+            playBeepSound();
+            showAlert(`🎉 Welcome ${name}! Account #${nextAccNum} successfully created with ${formatCurrency(deposit)} initial deposit.`, "success");
+        }
+
+        function handleAuthLogin(event) {
+            event.preventDefault();
+
+            if (!accounts || accounts.length === 0) {
+                showAlert("No accounts exist yet. Please create your account first!", "info");
+                switchAuthMode('create');
+                return;
+            }
+
+            const accNum = document.getElementById('loginAccountSelect').value;
+            const pin = document.getElementById('loginPin').value.trim();
+
+            if (!accNum) {
+                showAlert("Please select an account to sign in!", "error");
+                return;
+            }
+
+            const user = accounts.find(a => a.accountNumber === accNum);
+            if (!user) {
+                showAlert("Account not found!", "error");
+                return;
+            }
+
+            if (!pin || pin.length !== 4) {
+                showAlert("Please enter your 4-digit security PIN to log in.", "error");
+                return;
+            }
+
+            if (user.pin && user.pin !== pin) {
+                showAlert("❌ Invalid 4-digit PIN! Please check and try again.", "error");
+                return;
+            }
+
+            // PIN verified via login form — mark it
+            pinVerifiedAccounts[accNum] = true;
+            loginAsUser(user, true);
+        }
+
+        function quickDemoLogin(accNum) {
+            const user = accounts.find(a => a.accountNumber === accNum);
+            if (!user) {
+                showAlert("Account not found!", "error");
+                return;
+            }
+            // Require PIN before instant login
+            showPinModal(accNum, 'login');
+        }
+
+        function loginAsUser(user, showToast = true) {
+            currentSessionUser = user;
+            sessionStorage.setItem(STORAGE_KEY_SESSION, user.accountNumber);
+
+            // Mark this account as PIN-verified for the session (login = already authenticated)
+            pinVerifiedAccounts[user.accountNumber] = true;
+
+            // Filter system to this user's account (no PIN needed since we just authenticated)
+            selectAccountDirect(user.accountNumber);
+
+            // Update Header User Profile Badge
+            updateHeaderUserBadge(user);
+
+            // Hide Auth Overlay Gate
+            hideAuthOverlay();
+
+            if (showToast) {
+                playBeepSound();
+                showAlert(`👋 Welcome, <strong>${escapeHtml(user.name)}</strong>! Logged into Account #${user.accountNumber}.`, "success");
+            }
+        }
+
+        let currentModalAccNum = null;
+        let pendingPinAccNum = null;       // Which account is waiting for PIN
+        let pendingPinAction = null;       // What to do after PIN is verified: 'viewDetails', 'selectAccount', 'selectAndView'
+        let pinVerifiedAccounts = {};      // Cache: { accNum: true } — once verified in this session, skip re-asking
+
+        // ================= PIN VERIFICATION SYSTEM =================
+
+        function showPinModal(accNum, actionAfterVerify) {
+            const acc = accounts.find(a => a.accountNumber === accNum);
+            if (!acc) {
+                showAlert("Account not found!", "error");
+                return;
+            }
+
+            // If this account was already PIN-verified in this session, skip
+            if (pinVerifiedAccounts[accNum]) {
+                executePinVerifiedAction(accNum, actionAfterVerify);
+                return;
+            }
+
+            pendingPinAccNum = accNum;
+            pendingPinAction = actionAfterVerify;
+
+            // Populate PIN modal with account info
+            const nameEl = document.getElementById('pinModalAccName');
+            const numEl = document.getElementById('pinModalAccNum');
+            if (nameEl) nameEl.textContent = acc.name;
+            if (numEl) numEl.textContent = `Account #${acc.accountNumber} • ${acc.type}`;
+
+            // Clear all PIN inputs
+            clearPinInputs();
+
+            // Hide any previous error
+            const errMsg = document.getElementById('pinErrorMsg');
+            if (errMsg) errMsg.style.display = 'none';
+
+            // Show PIN modal
+            const modal = document.getElementById('pinVerifyModal');
+            if (modal) {
+                modal.style.display = 'flex';
+                // Focus on first PIN input after a tick
+                setTimeout(() => {
+                    const firstInput = document.getElementById('pinInput1');
+                    if (firstInput) firstInput.focus();
+                }, 100);
+            }
+        }
+
+        function clearPinInputs() {
+            for (let i = 1; i <= 4; i++) {
+                const inp = document.getElementById('pinInput' + i);
+                if (inp) {
+                    inp.value = '';
+                    inp.style.borderColor = 'var(--border)';
+                }
+            }
+        }
+
+        function getEnteredPin() {
+            let pin = '';
+            for (let i = 1; i <= 4; i++) {
+                const inp = document.getElementById('pinInput' + i);
+                pin += inp ? inp.value : '';
+            }
+            return pin;
+        }
+
+        function onPinDigitInput(currentInput, nextInputId) {
+            // Only allow digits
+            currentInput.value = currentInput.value.replace(/[^0-9]/g, '');
+            if (currentInput.value.length === 1 && nextInputId) {
+                const nextInput = document.getElementById(nextInputId);
+                if (nextInput) nextInput.focus();
+            }
+            // Auto-submit when all 4 digits entered
+            if (getEnteredPin().length === 4) {
+                setTimeout(() => verifyEnteredPin(), 150);
+            }
+        }
+
+        function onPinDigitKeydown(event, currentInput, prevInputId) {
+            if (event.key === 'Backspace' && currentInput.value === '' && prevInputId) {
+                const prevInput = document.getElementById(prevInputId);
+                if (prevInput) {
+                    prevInput.focus();
+                    prevInput.value = '';
+                }
+            }
+            if (event.key === 'Enter') {
+                verifyEnteredPin();
+            }
+        }
+
+        function verifyEnteredPin() {
+            const enteredPin = getEnteredPin();
+            if (enteredPin.length !== 4) {
+                showAlert("Please enter all 4 digits of your PIN.", "warning");
+                return;
+            }
+
+            const acc = accounts.find(a => a.accountNumber === pendingPinAccNum);
+            if (!acc) {
+                showAlert("Account not found!", "error");
+                closePinModal();
+                return;
+            }
+
+            if (acc.pin && acc.pin !== enteredPin) {
+                // Wrong PIN
+                const errMsg = document.getElementById('pinErrorMsg');
+                if (errMsg) errMsg.style.display = 'block';
+                // Flash inputs red
+                for (let i = 1; i <= 4; i++) {
+                    const inp = document.getElementById('pinInput' + i);
+                    if (inp) inp.style.borderColor = 'var(--danger)';
+                }
+                playBeepSound();
+                // Clear inputs after brief delay
+                setTimeout(() => {
+                    clearPinInputs();
+                    const firstInput = document.getElementById('pinInput1');
+                    if (firstInput) firstInput.focus();
+                }, 600);
+                return;
+            }
+
+            // ✅ PIN is correct!
+            pinVerifiedAccounts[pendingPinAccNum] = true;
+            closePinModal();
+            playBeepSound();
+            showAlert(`🔓 PIN verified! Access granted to ${escapeHtml(acc.name)}'s account.`, "success");
+
+            executePinVerifiedAction(pendingPinAccNum, pendingPinAction);
+        }
+
+        function executePinVerifiedAction(accNum, action) {
+            if (action === 'viewDetails') {
+                showAccountInfoModalDirect(accNum);
+            } else if (action === 'selectAccount') {
+                selectAccountDirect(accNum);
+            } else if (action === 'selectAndView') {
+                selectAccountDirect(accNum);
+                showAccountInfoModalDirect(accNum);
+            } else if (action === 'login') {
+                const user = accounts.find(a => a.accountNumber === accNum);
+                if (user) loginAsUser(user, true);
+            }
+        }
+
+        function closePinModal() {
+            const modal = document.getElementById('pinVerifyModal');
+            if (modal) modal.style.display = 'none';
+            clearPinInputs();
+            pendingPinAccNum = null;
+            pendingPinAction = null;
+        }
+
+        function closePinModalOnOutsideClick(event) {
+            if (event.target && event.target.id === 'pinVerifyModal') {
+                closePinModal();
+            }
+        }
+
+        // ================= ACCOUNT INFO MODAL (PIN-GATED) =================
+
+        function updateHeaderUserBadge(user) {
+            const badge = document.getElementById('headerUserProfile');
+            if (!badge) return;
+
+            if (user) {
+                badge.innerHTML = `<span>👤</span> <strong>${escapeHtml(user.name)}</strong> <span style="font-size:0.75rem; background:rgba(255,255,255,0.22); padding:2px 8px; border-radius:12px; margin-left:6px; font-weight:600; cursor:pointer;" title="Click to view all information & amount">👁️ View Details</span>`;
+            } else {
+                badge.innerHTML = `<span>👤</span> <strong>Select Account</strong>`;
+            }
+        }
+
+        // Public entry point: always requires PIN first
+        function openAccountInfoModal(targetAccNum = null) {
+            const accNum = targetAccNum || selectedAccountNum || (currentSessionUser ? currentSessionUser.accountNumber : null) || (accounts.length > 0 ? accounts[0].accountNumber : null);
+            if (!accNum) {
+                showAlert("No account selected! Please select or create an account first.", "warning");
+                return;
+            }
+            const acc = accounts.find(a => a.accountNumber === accNum);
+            if (!acc) {
+                showAlert("Account details not found!", "error");
+                return;
+            }
+            showPinModal(accNum, 'viewDetails');
+        }
+
+        // Internal: shows the details modal directly (called ONLY after PIN verified)
+        function showAccountInfoModalDirect(accNum) {
+            const acc = accounts.find(a => a.accountNumber === accNum);
+            if (!acc) return;
+
+            currentModalAccNum = acc.accountNumber;
+
+            const nameEl = document.getElementById('modalAccHolderName');
+            const subEl = document.getElementById('modalAccNumberSub');
+            const balEl = document.getElementById('modalAccBalance');
+            const typeBadgeEl = document.getElementById('modalAccTypeBadge');
+            const numEl = document.getElementById('modalAccNumber');
+            const statusEl = document.getElementById('modalAccStatus');
+            const phoneEl = document.getElementById('modalAccPhone');
+            const branchEl = document.getElementById('modalAccBranch');
+            const emailEl = document.getElementById('modalAccEmail');
+
+            if (nameEl) nameEl.textContent = acc.name;
+            if (subEl) subEl.textContent = `Account #${acc.accountNumber} • ${acc.type} Account`;
+            if (balEl) balEl.textContent = formatCurrency(acc.balance);
+            if (typeBadgeEl) {
+                typeBadgeEl.textContent = `${acc.type} Account`;
+                typeBadgeEl.className = `badge ${acc.type === 'Savings' ? 'badge-savings' : 'badge-current'}`;
+            }
+            if (numEl) numEl.textContent = `#${acc.accountNumber}`;
+            if (statusEl) {
+                statusEl.textContent = acc.status;
+                statusEl.style.color = acc.status === 'Active' ? 'var(--success)' : 'var(--danger)';
+            }
+            if (phoneEl) phoneEl.textContent = acc.phone || 'N/A';
+            if (branchEl) branchEl.textContent = acc.branch || 'Main Branch';
+            if (emailEl) emailEl.textContent = acc.email || 'N/A';
+
+            const modal = document.getElementById('accountInfoModal');
+            if (modal) modal.style.display = 'flex';
+        }
+
+        function closeAccountInfoModal() {
+            const modal = document.getElementById('accountInfoModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function closeAccountInfoModalOnOutsideClick(event) {
+            if (event.target && event.target.id === 'accountInfoModal') {
+                closeAccountInfoModal();
+            }
+        }
+
+        function modalAction(action) {
+            const targetNum = currentModalAccNum || selectedAccountNum;
+            closeAccountInfoModal();
+            if (!targetNum) return;
+
+            if (action === 'statement') {
+                selectAccountDirect(targetNum);
+                viewAccountStatement(targetNum);
+            } else {
+                quickSelectAccount(targetNum, action);
+            }
+        }
+
+        function logoutUser() {
+            currentSessionUser = null;
+            pinVerifiedAccounts = {};  // Clear all PIN verifications on logout
+            sessionStorage.removeItem(STORAGE_KEY_SESSION);
+            updateHeaderUserBadge(null);
+            showAuthOverlay('login');
+            showAlert("Signed out of your account.", "info");
+        }
+
+        // ================= DATABASE / STORAGE ENGINE =================
+        function initApp() {
+            loadData();
+            renderAll();
+
+            // Check if there is an active logged-in user in this browser session
+            const savedSessionAcc = sessionStorage.getItem(STORAGE_KEY_SESSION);
+            if (savedSessionAcc) {
+                const user = accounts.find(a => a.accountNumber === savedSessionAcc);
+                if (user) {
+                    loginAsUser(user, false);
+                    return;
+                }
+            }
+
+            // If no active session, ALWAYS open the Login Page first before entering the portal!
+            showAuthOverlay('create');
+        }
+
+        function loadData() {
+            try {
+                // Clear old legacy demo storage keys from prior runs
+                localStorage.removeItem("bank_accounts_data_inr");
+                localStorage.removeItem("bank_transactions_data_inr");
+                localStorage.removeItem("bank_current_session_user");
+
+                const savedAccounts = localStorage.getItem(STORAGE_KEY_ACCOUNTS);
+                const savedTxns = localStorage.getItem(STORAGE_KEY_TXNS);
+
+                if (savedAccounts) {
+                    accounts = JSON.parse(savedAccounts);
+                } else {
+                    accounts = [];
+                    saveAccounts();
+                }
+
+                if (savedTxns) {
+                    transactions = JSON.parse(savedTxns);
+                } else {
+                    transactions = [];
+                    saveTransactions();
+                }
+            } catch (err) {
+                console.error("Storage load error:", err);
+                accounts = [];
+                transactions = [];
+            }
+        }
+
+        function saveAccounts() {
+            localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(accounts));
+        }
+
+        function saveTransactions() {
+            localStorage.setItem(STORAGE_KEY_TXNS, JSON.stringify(transactions));
+        }
+
+        function resetDemoData() {
+            if (confirm("Are you sure you want to clear all accounts and start completely fresh?")) {
+                localStorage.removeItem(STORAGE_KEY_ACCOUNTS);
+                localStorage.removeItem(STORAGE_KEY_TXNS);
+                sessionStorage.removeItem(STORAGE_KEY_SESSION);
+                currentSessionUser = null;
+                accounts = [];
+                transactions = [];
+                selectedAccountNum = null;
+                saveAccounts();
+                saveTransactions();
+                renderAll();
+                showAuthOverlay('create');
+                showAlert("All data cleared. Please create your account to begin!", "info");
+            }
+        }
+
+        // ================= SINGLE ACCOUNT SELECTION LOGIC =================
+        // Public selectAccount: requires PIN before switching to an account
+        function selectAccount(accNum) {
+            if (accNum === null) {
+                // Switching to "All Accounts" view — no PIN needed
+                selectAccountDirect(null);
+                return;
+            }
+            // PIN gate: verify before selecting
+            showPinModal(accNum, 'selectAccount');
+        }
+
+        // Internal: select account directly (called ONLY after PIN is verified or from system)
+        function selectAccountDirect(accNum) {
+            selectedAccountNum = accNum;
+            renderAll();
+
+            if (accNum) {
+                const acc = accounts.find(a => a.accountNumber === accNum);
+                if (acc) {
+                    showAlert(`🎯 Now viewing single account: #${acc.accountNumber} (${acc.name}). All cards, stats, and logs updated!`, "info");
+                }
+            } else {
+                showAlert("🌐 Switched back to All Bank Accounts overview.", "info");
+            }
+        }
+
+        function handleCardClick(type) {
+            if (type === 'balance' || type === 'accounts') {
+                if (selectedAccountNum) {
+                    viewAccountStatement(selectedAccountNum);
+                } else {
+                    switchTab('accountsList');
+                }
+            } else if (type === 'inflow') {
+                filterStatementByType('DEPOSIT');
+            } else if (type === 'outflow') {
+                filterStatementByType('WITHDRAW');
+            }
+        }
+
+        // Filter Statement Directly from Metric Cards
+        function filterStatementByType(type) {
+            switchTab('statement');
+            const select = document.getElementById('txFilterType');
+            if (select) {
+                select.value = type;
+                filterTransactions();
+            }
+        }
+
+        // ================= NAVIGATION =================
+        function switchTab(tabId) {
+            if (tabId !== 'gpayScanner' && typeof stopCameraScanner === 'function') {
+                stopCameraScanner();
+            }
+
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+
+            const targetTab = document.getElementById(tabId);
+            if (targetTab) {
+                targetTab.classList.add('active');
+            }
+
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(btn => {
+                if (btn.getAttribute('onclick')?.includes(tabId)) {
+                    btn.classList.add('active');
+                }
+            });
+
+            if (tabId === 'transactions') {
+                populateTransactionPanels();
+            } else if (tabId === 'gpayScanner') {
+                populateGPayDropdown();
+            }
+        }
+
+        // ================= RENDERING ENGINE =================
+        function renderAll() {
+            if (currentSessionUser) {
+                const refreshedUser = accounts.find(a => a.accountNumber === currentSessionUser.accountNumber);
+                if (refreshedUser) {
+                    currentSessionUser = refreshedUser;
+                }
+                updateHeaderUserBadge(currentSessionUser);
+            } else {
+                updateHeaderUserBadge(null);
+            }
+
+            renderAccountPills();
+            renderStats();
+            renderSelectedAccountBanner();
+            renderAccountsTable();
+            renderTransactionsTable();
+            populateTransactionPanels();
+            populateGPayDropdown();
+        }
+
+        function onAccountPillClick(accNum) {
+            // Single PIN check that both selects the account AND opens the details modal
+            showPinModal(accNum, 'selectAndView');
+        }
+
+        function renderAccountPills() {
+            const container = document.getElementById('accountPillsContainer');
+            const badge = document.getElementById('activeAccountBadge');
+            if (!container) return;
+
+            let html = `
+                <button type="button" class="account-pill ${selectedAccountNum === null ? 'active' : ''}" onclick="selectAccount(null)">
+                    🌐 All Accounts (${accounts.length})
+                </button>
+            `;
+
+            accounts.forEach(acc => {
+                const isSelected = selectedAccountNum === acc.accountNumber;
+                html += `
+                    <button type="button" class="account-pill ${isSelected ? 'active' : ''}" onclick="onAccountPillClick('${acc.accountNumber}')" title="Click to view all information and amount for ${escapeHtml(acc.name)}">
+                        👤 #${acc.accountNumber} - ${escapeHtml(acc.name)} <span style="font-size:0.75rem; opacity:0.85; margin-left:5px; background:rgba(0,0,0,0.06); padding:2px 7px; border-radius:10px;">👁️ View</span>
+                    </button>
+                `;
+            });
+
+            container.innerHTML = html;
+
+            if (badge) {
+                if (selectedAccountNum) {
+                    const sel = accounts.find(a => a.accountNumber === selectedAccountNum);
+                    if (sel) {
+                        badge.innerHTML = `🎯 Filtered: <strong>#${sel.accountNumber} - ${escapeHtml(sel.name)}</strong> (${sel.type})`;
+                        badge.style.background = "#dcfce7";
+                        badge.style.color = "#15803d";
+                        badge.style.borderColor = "#86efac";
+                    }
+                } else {
+                    badge.innerHTML = `🌐 Viewing All Accounts (Global View)`;
+                    badge.style.background = "#e0f2fe";
+                    badge.style.color = "#0369a1";
+                    badge.style.borderColor = "#bae6fd";
+                }
+            }
+        }
+
+        function renderStats() {
+            const label1 = document.getElementById('statLabel1');
+            const label2 = document.getElementById('statLabel2');
+            const label3 = document.getElementById('statLabel3');
+            const label4 = document.getElementById('statLabel4');
+
+            const sub1 = document.getElementById('statSub1');
+            const sub2 = document.getElementById('statSub2');
+            const sub3 = document.getElementById('statSub3');
+            const sub4 = document.getElementById('statSub4');
+
+            if (selectedAccountNum) {
+                const acc = accounts.find(a => a.accountNumber === selectedAccountNum);
+                if (!acc) {
+                    selectedAccountNum = null;
+                    renderStats();
+                    return;
+                }
+
+                // Account-specific inflow (all deposits/credits into this account)
+                const accountInflow = transactions
+                    .filter(t => t.accountNumber === acc.accountNumber && (t.type === 'DEPOSIT' || t.type === 'CREDIT'))
+                    .reduce((sum, t) => sum + Number(t.amount), 0);
+
+                // Account-specific outflow (all withdrawals/transfers out of this account)
+                const accountOutflow = transactions
+                    .filter(t => t.accountNumber === acc.accountNumber && (t.type === 'WITHDRAW' || t.type === 'TRANSFER' || t.type === 'DEBIT'))
+                    .reduce((sum, t) => sum + Number(t.amount), 0);
+
+                label1.textContent = `Account Balance (#${acc.accountNumber})`;
+                document.getElementById('statTotalBalance').textContent = formatCurrency(acc.balance);
+                sub1.textContent = `${acc.type} • Available Funds`;
+
+                label2.textContent = `Account Status`;
+                document.getElementById('statAccountCount').textContent = acc.status;
+                sub2.textContent = `${acc.name} • ${acc.branch}`;
+
+                label3.textContent = `Total Inflow (Deposited)`;
+                document.getElementById('statTotalCredit').textContent = formatCurrency(accountInflow);
+                sub3.textContent = `All credits into #${acc.accountNumber}`;
+
+                label4.textContent = `Total Outflow (Withdrawn)`;
+                document.getElementById('statTotalDebit').textContent = formatCurrency(accountOutflow);
+                sub4.textContent = `All debits from #${acc.accountNumber}`;
+
+            } else {
+                // Global view across all accounts
+                const totalBalance = accounts.reduce((acc, curr) => acc + Number(curr.balance), 0);
+                const totalCredit = transactions
+                    .filter(t => t.type === 'DEPOSIT' || t.type === 'CREDIT')
+                    .reduce((acc, curr) => acc + Number(curr.amount), 0);
+                const totalDebit = transactions
+                    .filter(t => t.type === 'WITHDRAW' || t.type === 'TRANSFER' || t.type === 'DEBIT')
+                    .reduce((acc, curr) => acc + Number(curr.amount), 0);
+
+                label1.textContent = "Total Deposits";
+                document.getElementById('statTotalBalance').textContent = formatCurrency(totalBalance);
+                sub1.textContent = `Across all ${accounts.length} accounts`;
+
+                label2.textContent = "Active Accounts";
+                document.getElementById('statAccountCount').textContent = accounts.length;
+                sub2.textContent = "Savings & Current Accounts";
+
+                label3.textContent = "Total Inflow";
+                document.getElementById('statTotalCredit').textContent = formatCurrency(totalCredit);
+                sub3.textContent = "All deposits & credits received";
+
+                label4.textContent = "Total Outflow";
+                document.getElementById('statTotalDebit').textContent = formatCurrency(totalDebit);
+                sub4.textContent = "All withdrawals & transfers made";
+            }
+        }
+
+        function renderSelectedAccountBanner() {
+            const banner = document.getElementById('selectedAccountBanner');
+            if (!banner) return;
+
+            if (!selectedAccountNum) {
+                banner.style.display = "none";
+                banner.innerHTML = "";
+                return;
+            }
+
+            const acc = accounts.find(a => a.accountNumber === selectedAccountNum);
+            if (!acc) {
+                banner.style.display = "none";
+                return;
+            }
+
+            banner.className = "selected-account-banner";
+            banner.style.display = "flex";
+            banner.innerHTML = `
+                <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap; cursor:pointer;" onclick="openAccountInfoModal('${acc.accountNumber}')" title="Click to view amount and full details">
+                    <div style="background:#dbeafe; color:#1e40af; width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:bold;">
+                        👤
+                    </div>
+                    <div>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <h3 style="font-size:1.15rem; color:#0f172a; margin:0;">${escapeHtml(acc.name)}</h3>
+                            <span class="badge ${acc.type === 'Savings' ? 'badge-savings' : 'badge-current'}">${escapeHtml(acc.type)}</span>
+                            <span style="color:var(--success); font-weight:700; font-size:0.85rem;">● ${escapeHtml(acc.status)}</span>
+                        </div>
+                        <p style="font-size:0.85rem; color:var(--text-muted); margin-top:3px;">
+                            Account No: <strong>#${escapeHtml(acc.accountNumber)}</strong> • Phone: <strong>${escapeHtml(acc.phone)}</strong> • Email: <strong>${escapeHtml(acc.email || 'N/A')}</strong> • Branch: <strong>${escapeHtml(acc.branch)}</strong>
+                        </p>
+                    </div>
+                </div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+                    <button class="btn btn-sm" style="background:#0f172a; color:white;" onclick="openAccountInfoModal('${acc.accountNumber}')" title="Click to view amount and full details">👁️ View Amount & Details</button>
+                    <button class="btn btn-sm btn-success" onclick="quickSelectAccount('${acc.accountNumber}', 'deposit')">💵 Deposit</button>
+                    <button class="btn btn-sm btn-danger" onclick="quickSelectAccount('${acc.accountNumber}', 'withdraw')">🏧 Withdraw</button>
+                    <button class="btn btn-sm" style="background:#4285f4; color:white;" onclick="quickSelectAccount('${acc.accountNumber}', 'transfer')">🔁 Transfer</button>
+                    <button class="btn btn-sm btn-secondary" onclick="selectAccount(null)">✕ View All Accounts</button>
+                </div>
+            `;
+        }
+
+        function renderAccountsTable(filteredAccounts = null) {
+            const tbody = document.getElementById('accountsTableBody');
+            const data = filteredAccounts || accounts;
+
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="empty-state"><div class="empty-state-icon">📭</div>No accounts found.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = data.map(acc => {
+                const isSelected = selectedAccountNum === acc.accountNumber;
+                return `
+                    <tr class="${isSelected ? 'row-selected' : ''}">
+                        <td>
+                            <strong style="cursor:pointer; color:var(--primary);" onclick="openAccountInfoModal('${acc.accountNumber}')" title="Click to view account details">#${escapeHtml(acc.accountNumber)} 👁️</strong>
+                            ${isSelected ? '<span class="badge badge-credit" style="margin-left:4px; font-size:0.7rem;">ACTIVE</span>' : ''}
+                        </td>
+                        <td>
+                            <strong style="cursor:pointer;" onclick="openAccountInfoModal('${acc.accountNumber}')" title="Click to view account details">${escapeHtml(acc.name)}</strong>
+                            <div style="font-size:0.78rem; color:var(--text-muted);">${escapeHtml(acc.email || '')}</div>
+                        </td>
+                        <td>
+                            <span class="badge ${acc.type === 'Savings' ? 'badge-savings' : 'badge-current'}">${escapeHtml(acc.type)}</span>
+                        </td>
+                        <td>${escapeHtml(acc.phone)}</td>
+                        <td><strong>${formatCurrency(acc.balance)}</strong></td>
+                        <td><span style="color:var(--success); font-weight:700;">● ${escapeHtml(acc.status)}</span></td>
+                        <td>
+                            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                                <button class="btn btn-sm" style="background:#0f172a; color:white;" onclick="openAccountInfoModal('${acc.accountNumber}')" title="Click to view all information and amount">
+                                    👁️ View
+                                </button>
+                                <button class="btn btn-sm" style="background:#1e40af; color:white;" onclick="selectAccountAndGoDashboard('${acc.accountNumber}')" title="Filter entire system for this account">
+                                    🎯 ${isSelected ? 'Selected' : 'Select'}
+                                </button>
+                                <button class="btn btn-sm" style="background:#4338ca; color:white;" onclick="quickSelectAccount('${acc.accountNumber}', 'transfer')" title="Transfer money from this account to another">
+                                    🔁 Transfer
+                                </button>
+                                <button class="btn btn-sm btn-success" onclick="quickSelectAccount('${acc.accountNumber}', 'deposit')" title="Deposit to this account">Deposit</button>
+                                <button class="btn btn-sm btn-danger" onclick="quickSelectAccount('${acc.accountNumber}', 'withdraw')" title="Withdraw from this account">Withdraw</button>
+                                <button class="btn btn-sm btn-secondary" onclick="viewAccountStatement('${acc.accountNumber}')" title="View Statement">Statement</button>
+                                <button class="btn btn-sm" style="background:#fee2e2; color:#b91c1c;" onclick="deleteAccount('${acc.accountNumber}')" title="Close Account">✕</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function selectAccountAndGoDashboard(accNum) {
+            selectAccount(accNum);
+            switchTab('dashboard');
+        }
+
+        function getPartyDisplay(t) {
+            let role = t.partyRole || '';
+            let partyAcc = t.partyAccount || '';
+            let partyName = t.partyName || '';
+
+            // Fallback parsing for legacy/unmigrated transactions
+            if (!partyName && t.description) {
+                const toMatch = t.description.match(/Transfer to #?(\d+)\s*\(([^)]+)\)/i);
+                const fromMatch = t.description.match(/(?:received from|Received transfer from) #?(\d+)\s*\(([^)]+)\)/i);
+                if (toMatch) {
+                    partyAcc = toMatch[1];
+                    partyName = toMatch[2];
+                    role = 'TO';
+                } else if (fromMatch) {
+                    partyAcc = fromMatch[1];
+                    partyName = fromMatch[2];
+                    role = 'FROM';
+                } else if (t.description.toLowerCase().includes('google pay') || t.description.toLowerCase().includes('scanner') || t.description.toLowerCase().includes('qr') || t.description.toLowerCase().includes('upi')) {
+                    partyAcc = 'UPI Direct';
+                    partyName = 'Google Pay / QR';
+                    role = 'SCANNER';
+                }
+            }
+
+            if (!partyName) {
+                const currentAcc = accounts.find(a => a.accountNumber === t.accountNumber);
+                const defaultName = currentAcc ? currentAcc.name : 'Account Holder';
+                if (t.type === 'WITHDRAW') {
+                    role = 'SELF_WITHDRAW';
+                    partyAcc = t.accountNumber;
+                    partyName = defaultName;
+                } else if (t.description && t.description.toLowerCase().includes('opening')) {
+                    role = 'OPENING';
+                    partyAcc = t.accountNumber;
+                    partyName = defaultName;
+                } else {
+                    role = 'SELF_DEPOSIT';
+                    partyAcc = t.accountNumber;
+                    partyName = defaultName;
+                }
+            }
+
+            if (role === 'TO') {
+                return `
+                    <div class="party-badge party-to">
+                        <span class="party-direction">📤 Sent To:</span>
+                        <span class="party-name">${escapeHtml(partyName)}</span>
+                        <span class="party-acc">Account #${escapeHtml(partyAcc)}</span>
+                    </div>
+                `;
+            } else if (role === 'FROM') {
+                return `
+                    <div class="party-badge party-from">
+                        <span class="party-direction">📥 Received From:</span>
+                        <span class="party-name">${escapeHtml(partyName)}</span>
+                        <span class="party-acc">Account #${escapeHtml(partyAcc)}</span>
+                    </div>
+                `;
+            } else if (role === 'SCANNER') {
+                return `
+                    <div class="party-badge party-scanner">
+                        <span class="party-direction">📱 GPay / QR Inflow:</span>
+                        <span class="party-name">${escapeHtml(partyName)}</span>
+                        <span class="party-acc">${escapeHtml(partyAcc || 'UPI Direct')}</span>
+                    </div>
+                `;
+            } else if (role === 'SELF_WITHDRAW') {
+                return `
+                    <div class="party-badge party-self">
+                        <span class="party-direction">🏧 Self / Cash Out:</span>
+                        <span class="party-name">${escapeHtml(partyName)}</span>
+                        <span class="party-acc">Account #${escapeHtml(partyAcc)}</span>
+                    </div>
+                `;
+            } else if (role === 'OPENING') {
+                return `
+                    <div class="party-badge party-self" style="background:#fefce8; border-color:#fef08a;">
+                        <span class="party-direction" style="color:#ca8a04;">🎉 Opening Credit:</span>
+                        <span class="party-name">${escapeHtml(partyName)}</span>
+                        <span class="party-acc">Account #${escapeHtml(partyAcc)}</span>
+                    </div>
+                `;
+            } else {
+                return `
+                    <div class="party-badge party-self">
+                        <span class="party-direction">🏦 Cash Deposit:</span>
+                        <span class="party-name">${escapeHtml(partyName)}</span>
+                        <span class="party-acc">Account #${escapeHtml(partyAcc)}</span>
+                    </div>
+                `;
+            }
+        }
+
+        function renderTransactionsTable(filteredTxns = null) {
+            const statementTbody = document.getElementById('statementTableBody');
+            const recentTbody = document.getElementById('recentTransactionsTable');
+            const recentHeader = document.getElementById('recentTxTitle');
+
+            // Determine data to show: if selectedAccountNum is active and no manual filter passed, show single account
+            let data = filteredTxns;
+            if (!data) {
+                if (selectedAccountNum) {
+                    data = transactions.filter(t => t.accountNumber === selectedAccountNum);
+                } else {
+                    data = transactions;
+                }
+            }
+
+            const rowsHtml = (items) => {
+                if (items.length === 0) {
+                    return '<tr><td colspan="8" class="empty-state"><div class="empty-state-icon">📭</div>No transactions recorded yet.</td></tr>';
+                }
+
+                return items.map(t => {
+                    let badgeClass = 'badge-credit';
+                    let sign = '+';
+                    if (t.type === 'WITHDRAW') {
+                        badgeClass = 'badge-debit';
+                        sign = '-';
+                    } else if (t.type === 'TRANSFER') {
+                        badgeClass = 'badge-transfer';
+                        sign = '⇄';
+                    }
+
+                    const acc = accounts.find(a => a.accountNumber === t.accountNumber);
+                    const accName = acc ? acc.name : '';
+
+                    return `
+                        <tr>
+                            <td><code>${escapeHtml(t.id)}</code></td>
+                            <td style="white-space:nowrap; font-size:0.85rem; color:var(--text-muted);">${escapeHtml(t.date)}</td>
+                            <td>
+                                <strong>#${escapeHtml(t.accountNumber)}</strong>
+                                ${accName ? `<div style="font-size:0.78rem; color:var(--text-muted);">${escapeHtml(accName)}</div>` : ''}
+                            </td>
+                            <td>${getPartyDisplay(t)}</td>
+                            <td><span class="badge ${badgeClass}">${escapeHtml(t.type)}</span></td>
+                            <td style="font-weight:700; white-space:nowrap; color:${t.type === 'WITHDRAW' ? 'var(--danger)' : 'var(--success)'};">
+                                ${sign} ${formatCurrency(t.amount)}
+                            </td>
+                            <td style="white-space:nowrap; font-weight:600;">${t.balanceAfter !== undefined ? formatCurrency(t.balanceAfter) : '-'}</td>
+                            <td style="font-size:0.85rem; color:var(--text-main);">${escapeHtml(t.description || '-')}</td>
+                        </tr>
+                    `;
+                }).join('');
+            };
+
+            if (statementTbody) statementTbody.innerHTML = rowsHtml(data);
+
+            if (recentTbody) {
+                let recentSlice;
+                if (selectedAccountNum) {
+                    const singleTx = transactions.filter(t => t.accountNumber === selectedAccountNum);
+                    recentSlice = singleTx.slice(0, 5);
+                    if (recentHeader) {
+                        const acc = accounts.find(a => a.accountNumber === selectedAccountNum);
+                        recentHeader.innerHTML = `🕒 Recent Transactions for <strong>#${selectedAccountNum} (${escapeHtml(acc ? acc.name : '')})</strong>`;
+                    }
+                } else {
+                    recentSlice = transactions.slice(0, 5);
+                    if (recentHeader) {
+                        recentHeader.innerHTML = `🕒 Recent Transactions (All Accounts)`;
+                    }
+                }
+                recentTbody.innerHTML = rowsHtml(recentSlice);
+            }
+        }
+
+        // ================= TRANSACTIONS (DEPOSIT, WITHDRAW & 2-ACCOUNT TRANSFER) =================
+        function setTransactionMode(mode) {
+            currentTxMode = mode;
+
+            // Update mode buttons
+            document.getElementById('btnModeDeposit')?.classList.toggle('active', mode === 'deposit');
+            document.getElementById('btnModeWithdraw')?.classList.toggle('active', mode === 'withdraw');
+            document.getElementById('btnModeTransfer')?.classList.toggle('active', mode === 'transfer');
+
+            const badge = document.getElementById('txModeBadge');
+            const panelTransfer = document.getElementById('panelTransfer');
+            const panelSingle = document.getElementById('panelSingleAccount');
+
+            if (mode === 'transfer') {
+                if (badge) badge.innerHTML = `🔁 Mode: Account-to-Account Transfer`;
+                if (panelTransfer) panelTransfer.style.display = 'block';
+                if (panelSingle) panelSingle.style.display = 'none';
+                populateTransferDropdowns();
+            } else {
+                if (panelTransfer) panelTransfer.style.display = 'none';
+                if (panelSingle) panelSingle.style.display = 'block';
+
+                const label = document.getElementById('singleAccountLabel');
+                const btnSubmit = document.getElementById('btnSingleSubmit');
+
+                if (mode === 'deposit') {
+                    if (badge) badge.innerHTML = `💵 Mode: Deposit Funds`;
+                    if (label) label.textContent = 'Account to Deposit Into *';
+                    if (btnSubmit) {
+                        btnSubmit.innerHTML = '💵 Confirm Deposit';
+                        btnSubmit.className = 'btn btn-success';
+                    }
+                } else if (mode === 'withdraw') {
+                    if (badge) badge.innerHTML = `🏧 Mode: Withdraw Funds`;
+                    if (label) label.textContent = 'Account to Withdraw From *';
+                    if (btnSubmit) {
+                        btnSubmit.innerHTML = '🏧 Confirm Withdrawal';
+                        btnSubmit.className = 'btn btn-danger';
+                    }
+                }
+
+                populateSingleAccountDropdown();
+            }
+        }
+
+        function prepareTransaction(type) {
+            switchTab('transactions');
+            setTransactionMode(type);
+        }
+
+        function quickSelectAccount(accNum, actionType) {
+            selectAccount(accNum);
+            prepareTransaction(actionType);
+        }
+
+        // Populate and synchronize the 2-account transfer dropdowns & live cards
+        function populateTransferDropdowns() {
+            const senderSelect = document.getElementById('transferFromSelect');
+            const receiverSelect = document.getElementById('transferToSelect');
+            if (!senderSelect || !receiverSelect) return;
+
+            // 1. Populate Sender Select with all accounts
+            const currentSenderVal = senderSelect.value || selectedAccountNum || (accounts[0] ? accounts[0].accountNumber : "");
+            
+            senderSelect.innerHTML = accounts.map(acc => `
+                <option value="${acc.accountNumber}" ${acc.accountNumber === currentSenderVal ? 'selected' : ''}>
+                    #${acc.accountNumber} - ${acc.name} (${acc.type})
+                </option>
+            `).join('');
+
+            // If still not set, set to first
+            const activeSenderId = senderSelect.value || (accounts[0] ? accounts[0].accountNumber : "");
+            senderSelect.value = activeSenderId;
+
+            // 2. Populate Receiver Select with ALL OTHER ACCOUNTS (excluding active sender)
+            populateReceiverList(activeSenderId);
+
+            // 3. Render both preview cards & update summary
+            updateTransferCards();
+        }
+
+        function populateReceiverList(senderId) {
+            const receiverSelect = document.getElementById('transferToSelect');
+            if (!receiverSelect) return;
+
+            const prevReceiverVal = receiverSelect.value;
+            const otherAccounts = accounts.filter(a => a.accountNumber !== senderId);
+
+            if (otherAccounts.length === 0) {
+                receiverSelect.innerHTML = '<option value="">-- No other accounts available to receive transfer --</option>';
+                return;
+            }
+
+            let html = otherAccounts.map(acc => `
+                <option value="${acc.accountNumber}" ${acc.accountNumber === prevReceiverVal ? 'selected' : ''}>
+                    #${acc.accountNumber} - ${acc.name} (${acc.type})
+                </option>
+            `).join('');
+
+            receiverSelect.innerHTML = html;
+
+            // Ensure valid selection
+            if (!otherAccounts.some(a => a.accountNumber === receiverSelect.value)) {
+                receiverSelect.value = otherAccounts[0].accountNumber;
+            }
+        }
+
+        function onTransferSenderChanged() {
+            const senderId = document.getElementById('transferFromSelect').value;
+            // Update recipient list to exclude new sender
+            populateReceiverList(senderId);
+            updateTransferCards();
+        }
+
+        function onTransferReceiverChanged() {
+            updateTransferCards();
+        }
+
+        function onTransferAmountInput() {
+            updateTransferCards();
+        }
+
+        function quickAddTransferAmount(amt) {
+            const input = document.getElementById('transferAmount');
+            if (!input) return;
+            const current = parseFloat(input.value) || 0;
+            input.value = current + amt;
+            updateTransferCards();
+        }
+
+        function updateTransferCards() {
+            const senderId = document.getElementById('transferFromSelect')?.value;
+            const receiverId = document.getElementById('transferToSelect')?.value;
+            const amount = parseFloat(document.getElementById('transferAmount')?.value) || 0;
+
+            const senderCard = document.getElementById('senderAccountCard');
+            const receiverCard = document.getElementById('receiverAccountCard');
+            const summaryPill = document.getElementById('transferSummaryPill');
+            const liveAmount = document.getElementById('transferLiveAmount');
+
+            const sender = accounts.find(a => a.accountNumber === senderId);
+            const receiver = accounts.find(a => a.accountNumber === receiverId);
+
+            if (senderCard) {
+                if (sender) {
+                    const balanceAfter = sender.balance - amount;
+                    const isDeficit = amount > sender.balance;
+
+                    senderCard.innerHTML = `
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                            <div>
+                                <h4 style="font-size:1.02rem; color:#0f172a; margin:0;">${escapeHtml(sender.name)}</h4>
+                                <span style="font-size:0.8rem; color:var(--text-muted);">#${sender.accountNumber} • ${sender.type}</span>
+                            </div>
+                            <span class="badge ${sender.type === 'Savings' ? 'badge-savings' : 'badge-current'}">${sender.type}</span>
+                        </div>
+                        <div style="margin-top:10px; padding-top:8px; border-top:1px dashed var(--border); display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-size:0.8rem; color:var(--text-muted);">Available Balance:</span>
+                            <strong style="font-size:1.05rem; color:${isDeficit ? 'var(--danger)' : '#0f172a'};">${formatCurrency(sender.balance)}</strong>
+                        </div>
+                        ${amount > 0 ? `
+                            <div style="margin-top:4px; font-size:0.78rem; text-align:right; color:${isDeficit ? 'var(--danger)' : 'var(--text-muted)'};">
+                                ${isDeficit ? '⚠️ Insufficient Funds for Transfer!' : `Balance After Transfer: <strong>${formatCurrency(balanceAfter)}</strong>`}
+                            </div>
+                        ` : ''}
+                    `;
+                } else {
+                    senderCard.innerHTML = '<span style="color:var(--text-muted); font-size:0.85rem;">Please select a sender account</span>';
+                }
+            }
+
+            if (receiverCard) {
+                if (receiver) {
+                    const balanceAfter = receiver.balance + amount;
+                    receiverCard.innerHTML = `
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                            <div>
+                                <h4 style="font-size:1.02rem; color:#0f172a; margin:0;">${escapeHtml(receiver.name)}</h4>
+                                <span style="font-size:0.8rem; color:var(--text-muted);">#${receiver.accountNumber} • ${receiver.type}</span>
+                            </div>
+                            <span class="badge ${receiver.type === 'Savings' ? 'badge-savings' : 'badge-current'}">${receiver.type}</span>
+                        </div>
+                        <div style="margin-top:10px; padding-top:8px; border-top:1px dashed var(--border); display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-size:0.8rem; color:var(--text-muted);">Current Balance:</span>
+                            <strong style="font-size:1.05rem; color:var(--success);">${formatCurrency(receiver.balance)}</strong>
+                        </div>
+                        ${amount > 0 ? `
+                            <div style="margin-top:4px; font-size:0.78rem; text-align:right; color:var(--success);">
+                                Balance After Transfer: <strong>${formatCurrency(balanceAfter)}</strong>
+                            </div>
+                        ` : ''}
+                    `;
+                } else {
+                    receiverCard.innerHTML = '<span style="color:var(--text-muted); font-size:0.85rem;">Select beneficiary from list above</span>';
+                }
+            }
+
+            if (summaryPill) {
+                if (sender && receiver) {
+                    summaryPill.innerHTML = `
+                        <span>📤 From <strong>#${sender.accountNumber} (${escapeHtml(sender.name)})</strong> ➔ 📥 To <strong>#${receiver.accountNumber} (${escapeHtml(receiver.name)})</strong></span>
+                        <span style="font-weight:700; color:var(--primary); font-size:0.95rem;">Amount: ${formatCurrency(amount)}</span>
+                    `;
+                } else {
+                    summaryPill.innerHTML = `<span>Select both accounts above to preview transfer</span>`;
+                }
+            }
+        }
+
+        // Handle Two-Account Transfer Execution
+        function handleTransferSubmit(event) {
+            event.preventDefault();
+
+            const fromAccNum = document.getElementById('transferFromSelect').value;
+            const toAccNum = document.getElementById('transferToSelect').value;
+            const amount = parseFloat(document.getElementById('transferAmount').value);
+            const remarks = document.getElementById('transferRemarks').value.trim();
+
+            if (!fromAccNum) {
+                showAlert("Please select a sender account!", "error");
+                return;
+            }
+            if (!toAccNum) {
+                showAlert("Please choose a beneficiary account from the list!", "error");
+                return;
+            }
+            if (fromAccNum === toAccNum) {
+                showAlert("Sender and recipient cannot be the same account!", "error");
+                return;
+            }
+            if (isNaN(amount) || amount <= 0) {
+                showAlert("Please enter a valid transfer amount greater than ₹0.", "error");
+                return;
+            }
+
+            const fromAcc = accounts.find(a => a.accountNumber === fromAccNum);
+            const toAcc = accounts.find(a => a.accountNumber === toAccNum);
+
+            if (!fromAcc) {
+                showAlert("Sender account not found!", "error");
+                return;
+            }
+            if (!toAcc) {
+                showAlert("Beneficiary account not found!", "error");
+                return;
+            }
+            if (fromAcc.balance < amount) {
+                showAlert(`Insufficient funds in #${fromAcc.accountNumber}! Current balance: ${formatCurrency(fromAcc.balance)}.`, "error");
+                return;
+            }
+
+            // Execute Transfer
+            fromAcc.balance -= amount;
+            toAcc.balance += amount;
+
+            const txnId = "TXN" + Math.floor(10000 + Math.random() * 90000);
+            const dateStr = new Date().toLocaleString('en-IN');
+
+            // 1. Record Debit for Sender
+            transactions.unshift({
+                id: txnId,
+                accountNumber: fromAcc.accountNumber,
+                type: "TRANSFER",
+                amount: amount,
+                balanceAfter: fromAcc.balance,
+                date: dateStr,
+                partyAccount: toAcc.accountNumber,
+                partyName: toAcc.name,
+                partyRole: "TO",
+                description: remarks ? `Transfer to #${toAcc.accountNumber} (${toAcc.name}) - ${remarks}` : `Transferred to #${toAcc.accountNumber} (${toAcc.name})`
+            });
+
+            // 2. Record Credit for Beneficiary
+            transactions.unshift({
+                id: "TXN" + Math.floor(10000 + Math.random() * 90000),
+                accountNumber: toAcc.accountNumber,
+                type: "DEPOSIT",
+                amount: amount,
+                balanceAfter: toAcc.balance,
+                date: dateStr,
+                partyAccount: fromAcc.accountNumber,
+                partyName: fromAcc.name,
+                partyRole: "FROM",
+                description: remarks ? `Transfer received from #${fromAcc.accountNumber} (${fromAcc.name}) - ${remarks}` : `Received transfer from #${fromAcc.accountNumber} (${fromAcc.name})`
+            });
+
+            saveAccounts();
+            saveTransactions();
+            document.getElementById('transferForm').reset();
+            renderAll();
+            playBeepSound();
+
+            showAlert(`🎉 Successfully transferred ${formatCurrency(amount)} from #${fromAcc.accountNumber} (${fromAcc.name}) to #${toAcc.accountNumber} (${toAcc.name})!`, "success");
+        }
+
+        // Single Account (Deposit & Withdraw) Logic
+        function populateSingleAccountDropdown() {
+            const select = document.getElementById('singleAccountSelect');
+            if (!select) return;
+
+            const activeVal = select.value || selectedAccountNum || (accounts[0] ? accounts[0].accountNumber : "");
+
+            select.innerHTML = accounts.map(acc => `
+                <option value="${acc.accountNumber}" ${acc.accountNumber === activeVal ? 'selected' : ''}>
+                    #${acc.accountNumber} - ${acc.name} (${acc.type})
+                </option>
+            `).join('');
+
+            onSingleAccountChanged();
+        }
+
+        function onSingleAccountChanged() {
+            const accNum = document.getElementById('singleAccountSelect')?.value;
+            const card = document.getElementById('singleAccountCard');
+            if (!card) return;
+
+            const acc = accounts.find(a => a.accountNumber === accNum);
+            if (acc) {
+                card.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <h4 style="font-size:1.02rem; margin:0; color:#0f172a;">${escapeHtml(acc.name)}</h4>
+                            <span style="font-size:0.8rem; color:var(--text-muted);">#${acc.accountNumber} • ${acc.type} • ${acc.branch}</span>
+                        </div>
+                        <div style="text-align:right;">
+                            <span style="font-size:0.75rem; color:var(--text-muted); display:block;">Current Balance</span>
+                            <strong style="font-size:1.2rem; color:var(--primary);">${formatCurrency(acc.balance)}</strong>
+                        </div>
+                    </div>
+                `;
+            } else {
+                card.innerHTML = '';
+            }
+        }
+
+        function quickAddSingleAmount(amt) {
+            const input = document.getElementById('singleAmount');
+            if (!input) return;
+            const current = parseFloat(input.value) || 0;
+            input.value = current + amt;
+        }
+
+        function handleSingleAccountSubmit(event) {
+            event.preventDefault();
+
+            const accNum = document.getElementById('singleAccountSelect').value;
+            const amount = parseFloat(document.getElementById('singleAmount').value);
+            const remarks = document.getElementById('singleRemarks').value.trim();
+
+            if (!accNum) {
+                showAlert("Please select an account!", "error");
+                return;
+            }
+            if (isNaN(amount) || amount <= 0) {
+                showAlert("Please enter a valid amount greater than ₹0.", "error");
+                return;
+            }
+
+            const acc = accounts.find(a => a.accountNumber === accNum);
+            if (!acc) {
+                showAlert("Account not found!", "error");
+                return;
+            }
+
+            const txnId = "TXN" + Math.floor(10000 + Math.random() * 90000);
+            const dateStr = new Date().toLocaleString('en-IN');
+
+            if (currentTxMode === 'deposit') {
+                acc.balance += amount;
+                transactions.unshift({
+                    id: txnId,
+                    accountNumber: acc.accountNumber,
+                    type: "DEPOSIT",
+                    amount: amount,
+                    balanceAfter: acc.balance,
+                    date: dateStr,
+                    partyAccount: acc.accountNumber,
+                    partyName: acc.name,
+                    partyRole: "SELF_DEPOSIT",
+                    description: remarks || "Cash Deposit"
+                });
+                playBeepSound();
+                showAlert(`✅ Successfully deposited ${formatCurrency(amount)} into Account #${acc.accountNumber} (${acc.name}). New balance: ${formatCurrency(acc.balance)}`, "success");
+            } else if (currentTxMode === 'withdraw') {
+                if (acc.balance < amount) {
+                    showAlert(`Insufficient funds in #${acc.accountNumber}! Available: ${formatCurrency(acc.balance)}, cannot withdraw ${formatCurrency(amount)}.`, "error");
+                    return;
+                }
+                acc.balance -= amount;
+                transactions.unshift({
+                    id: txnId,
+                    accountNumber: acc.accountNumber,
+                    type: "WITHDRAW",
+                    amount: amount,
+                    balanceAfter: acc.balance,
+                    date: dateStr,
+                    partyAccount: acc.accountNumber,
+                    partyName: acc.name,
+                    partyRole: "SELF_WITHDRAW",
+                    description: remarks || "Cash Withdrawal"
+                });
+                playBeepSound();
+                showAlert(`✅ Successfully withdrew ${formatCurrency(amount)} from Account #${acc.accountNumber} (${acc.name}). Remaining balance: ${formatCurrency(acc.balance)}`, "success");
+            }
+
+            saveAccounts();
+            saveTransactions();
+            document.getElementById('singleAccountForm').reset();
+            renderAll();
+        }
+
+        function populateTransactionPanels() {
+            setTransactionMode(currentTxMode);
+        }
+
+        function populateGPayDropdown() {
+            const gpaySelect = document.getElementById('gpayAccount');
+            const scannerSelect = document.getElementById('scannerTargetAccount');
+
+            const options = accounts.map(acc => 
+                `<option value="${acc.accountNumber}" ${selectedAccountNum === acc.accountNumber ? 'selected' : ''}>#${acc.accountNumber} - ${acc.name} (${acc.type})</option>`
+            ).join('');
+
+            if (gpaySelect) gpaySelect.innerHTML = '<option value="">-- Choose Account --</option>' + options;
+            if (scannerSelect) scannerSelect.innerHTML = '<option value="">-- Choose Account to Credit --</option>' + options;
+
+            if (selectedAccountNum) {
+                if (gpaySelect) gpaySelect.value = selectedAccountNum;
+                if (scannerSelect) scannerSelect.value = selectedAccountNum;
+            }
+        }
+
+        function viewAccountStatement(accNum) {
+            selectAccount(accNum);
+            switchTab('statement');
+            const searchInput = document.getElementById('txSearchInput');
+            if (searchInput) {
+                searchInput.value = accNum;
+                filterTransactions();
+            }
+        }
+
+        function deleteAccount(accNum) {
+            const acc = accounts.find(a => a.accountNumber === accNum);
+            if (!acc) return;
+            if (confirm(`Are you sure you want to close and delete Account #${acc.accountNumber} (${acc.name})?`)) {
+                accounts = accounts.filter(a => a.accountNumber !== accNum);
+                transactions = transactions.filter(t => t.accountNumber !== accNum);
+                if (selectedAccountNum === accNum) {
+                    selectedAccountNum = accounts[0] ? accounts[0].accountNumber : null;
+                }
+                if (currentSessionUser && currentSessionUser.accountNumber === accNum) {
+                    currentSessionUser = accounts[0] || null;
+                    if (currentSessionUser) {
+                        sessionStorage.setItem(STORAGE_KEY_SESSION, currentSessionUser.accountNumber);
+                    } else {
+                        sessionStorage.removeItem(STORAGE_KEY_SESSION);
+                    }
+                }
+                saveAccounts();
+                saveTransactions();
+                renderAll();
+                if (accounts.length === 0) {
+                    showAuthOverlay('create');
+                }
+                showAlert(`Account #${accNum} has been closed.`, "info");
+            }
+        }
+
+        function handleCreateAccount(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('accName').value.trim();
+            const email = document.getElementById('accEmail').value.trim();
+            const phone = document.getElementById('accPhone').value.trim();
+            const type = document.getElementById('accType').value;
+            const deposit = parseFloat(document.getElementById('accInitialDeposit').value);
+            const branch = document.getElementById('accBranch').value;
+
+            if (!name || !phone || isNaN(deposit) || deposit < 100) {
+                showAlert("Please enter valid details. Minimum opening balance is ₹100.", "error");
+                return;
+            }
+
+            // Generate next sequential account number using getNextAccountNumber
+            const nextAccNum = getNextAccountNumber();
+
+            const newAccount = {
+                accountNumber: nextAccNum,
+                name: name,
+                email: email,
+                phone: phone,
+                type: type,
+                balance: deposit,
+                branch: branch,
+                pin: "1234",
+                status: "Active"
+            };
+
+            accounts.push(newAccount);
+            saveAccounts();
+
+            const newTxn = {
+                id: "TXN" + Math.floor(10000 + Math.random() * 90000),
+                accountNumber: nextAccNum,
+                type: "DEPOSIT",
+                amount: deposit,
+                balanceAfter: deposit,
+                date: new Date().toLocaleString('en-IN'),
+                partyAccount: nextAccNum,
+                partyName: name,
+                partyRole: "OPENING",
+                description: "Account Opening Deposit"
+            };
+
+            transactions.unshift(newTxn);
+            saveTransactions();
+
+            // Set new account as active
+            selectedAccountNum = nextAccNum;
+
+            document.getElementById('createAccountForm').reset();
+            renderAll();
+            playBeepSound();
+            showAlert(`🎉 Account #${nextAccNum} successfully created for ${name}! Selected as active account.`, "success");
+            switchTab('dashboard');
+        }
+
+        // ================= SEARCH & FILTERS =================
+        function filterAccounts() {
+            const query = (document.getElementById('accountSearchInput')?.value || '').toLowerCase().trim();
+            const filtered = accounts.filter(a => 
+                a.name.toLowerCase().includes(query) ||
+                a.accountNumber.toLowerCase().includes(query) ||
+                a.phone.includes(query) ||
+                a.type.toLowerCase().includes(query)
+            );
+            renderAccountsTable(filtered);
+        }
+
+        function filterTransactions() {
+            const query = (document.getElementById('txSearchInput')?.value || '').toLowerCase().trim();
+            const filterType = document.getElementById('txFilterType')?.value || 'ALL';
+
+            // Filter base transactions: if query is empty and single account selected, use single account transactions
+            let baseList = transactions;
+            if (selectedAccountNum && !query) {
+                baseList = transactions.filter(t => t.accountNumber === selectedAccountNum);
+            }
+
+            const filtered = baseList.filter(t => {
+                const partyNameStr = (t.partyName || '').toLowerCase();
+                const partyAccStr = (t.partyAccount || '').toLowerCase();
+                const matchesQuery = t.id.toLowerCase().includes(query) ||
+                    t.accountNumber.toLowerCase().includes(query) ||
+                    partyNameStr.includes(query) ||
+                    partyAccStr.includes(query) ||
+                    (t.description && t.description.toLowerCase().includes(query));
+
+                const matchesType = (filterType === 'ALL') || (t.type === filterType);
+                return matchesQuery && matchesType;
+            });
+
+            renderTransactionsTable(filtered);
+        }
+
+        function exportStatementCSV() {
+            const listToExport = selectedAccountNum 
+                ? transactions.filter(t => t.accountNumber === selectedAccountNum) 
+                : transactions;
+
+            if (listToExport.length === 0) {
+                showAlert("No transactions to export.", "info");
+                return;
+            }
+
+            const headers = "Transaction ID,Date & Time,Account Number,Account Name,Counterparty Name,Counterparty Account,Party Role,Type,Amount (INR),Balance After,Remarks\n";
+            const rows = listToExport.map(t => {
+                const acc = accounts.find(a => a.accountNumber === t.accountNumber);
+                const accName = acc ? acc.name : "";
+                
+                let partyName = t.partyName || "";
+                let partyAcc = t.partyAccount || "";
+                let partyRole = t.partyRole || "";
+                if (!partyName && t.description) {
+                    const toMatch = t.description.match(/Transfer to #?(\d+)\s*\(([^)]+)\)/i);
+                    const fromMatch = t.description.match(/(?:received from|Received transfer from) #?(\d+)\s*\(([^)]+)\)/i);
+                    if (toMatch) {
+                        partyAcc = toMatch[1];
+                        partyName = toMatch[2];
+                        partyRole = "TO";
+                    } else if (fromMatch) {
+                        partyAcc = fromMatch[1];
+                        partyName = fromMatch[2];
+                        partyRole = "FROM";
+                    }
+                }
+                if (!partyName) {
+                    partyName = accName || "Self";
+                    partyAcc = t.accountNumber;
+                    partyRole = t.type === "WITHDRAW" ? "SELF_WITHDRAW" : "SELF_DEPOSIT";
+                }
+
+                return `"${t.id}","${t.date}","${t.accountNumber}","${accName.replace(/"/g, '""')}","${partyName.replace(/"/g, '""')}","${partyAcc}","${partyRole}","${t.type}","${t.amount}","${t.balanceAfter || 0}","${(t.description || '').replace(/"/g, '""')}"`;
+            }).join("\n");
+
+            const blob = new Blob([headers + rows], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", `bank_statement_${selectedAccountNum || 'all'}_${Date.now()}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showAlert("Statement CSV exported successfully!", "success");
+        }
+
+        // ================= GOOGLE PAY & SCANNER BACKEND =================
+        let cameraStream = null;
+        let isCameraRunning = false;
+        let activeGpayData = null;
+
+        async function toggleCameraScanner() {
+            if (isCameraRunning) {
+                stopCameraScanner();
+            } else {
+                await startCameraScanner();
+            }
+        }
+
+        async function startCameraScanner() {
+            const video = document.getElementById('scannerVideo');
+            const overlay = document.getElementById('scannerOverlayMessage');
+            const status = document.getElementById('scannerStatus');
+            const btnToggle = document.getElementById('btnToggleCam');
+
+            try {
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    cameraStream = await navigator.mediaDevices.getUserMedia({
+                        video: { facingMode: "environment" }
+                    });
+                    video.srcObject = cameraStream;
+                    await video.play();
+                    isCameraRunning = true;
+                    if (overlay) overlay.style.display = 'none';
+                    if (status) {
+                        status.textContent = 'Status: 🟢 Camera Live. Align QR code inside frame.';
+                        status.style.color = '#16a34a';
+                    }
+                    if (btnToggle) {
+                        btnToggle.textContent = '⏹️ Stop Camera';
+                        btnToggle.className = 'btn btn-sm btn-danger';
+                    }
+                } else {
+                    showAlert("Camera API not supported in this browser. Use Quick Scan simulation below.", "error");
+                }
+            } catch (err) {
+                console.error("Camera access error:", err);
+                if (overlay) {
+                    overlay.innerHTML = '⚠️ Camera permission denied or device not found.<br><small style="display:block;margin-top:4px;">You can use the 1-Click Quick Scan buttons below!</small>';
+                    overlay.style.display = 'block';
+                }
+                if (status) {
+                    status.textContent = 'Status: Camera unavailable';
+                    status.style.color = '#dc2626';
+                }
+            }
+        }
+
+        function stopCameraScanner() {
+            const video = document.getElementById('scannerVideo');
+            const overlay = document.getElementById('scannerOverlayMessage');
+            const status = document.getElementById('scannerStatus');
+            const btnToggle = document.getElementById('btnToggleCam');
+
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = null;
+            }
+            if (video) {
+                video.srcObject = null;
+            }
+            isCameraRunning = false;
+            if (overlay) {
+                overlay.innerHTML = '📷 Camera inactive<br><button type="button" class="btn btn-sm btn-success" onclick="toggleCameraScanner()" style="margin-top:8px;">Start Camera</button>';
+                overlay.style.display = 'block';
+            }
+            if (status) {
+                status.textContent = 'Status: Ready to scan QR code';
+                status.style.color = '#64748b';
+            }
+            if (btnToggle) {
+                btnToggle.textContent = '📷 Start Camera';
+                btnToggle.className = 'btn btn-sm';
+            }
+        }
+
+        function handleQrFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            let targetAccNum = document.getElementById('scannerTargetAccount').value || selectedAccountNum;
+            if (!targetAccNum) {
+                if (accounts.length > 0) {
+                    targetAccNum = accounts[0].accountNumber;
+                    document.getElementById('scannerTargetAccount').value = targetAccNum;
+                } else {
+                    showAlert("Please create an account first!", "error");
+                    return;
+                }
+            }
+
+            const amountPrompt = prompt(`Uploaded QR Image: "${file.name}"\nEnter payment amount to collect:`, "1500");
+            if (amountPrompt === null) return;
+            const amount = parseFloat(amountPrompt);
+            if (isNaN(amount) || amount <= 0) {
+                showAlert("Invalid amount entered!", "error");
+                return;
+            }
+
+            processScannerDeposit(targetAccNum, amount, `QR Image Upload (${file.name})`);
+        }
+
+        function simulateGpayScan(amount) {
+            let targetAccNum = document.getElementById('scannerTargetAccount').value || selectedAccountNum;
+            if (!targetAccNum) {
+                if (accounts.length > 0) {
+                    targetAccNum = accounts[0].accountNumber;
+                    document.getElementById('scannerTargetAccount').value = targetAccNum;
+                } else {
+                    showAlert("Please create an account first!", "error");
+                    return;
+                }
+            }
+            processScannerDeposit(targetAccNum, amount, "Google Pay Scanner Payment (UPI)");
+        }
+
+        function promptCustomScan() {
+            const custom = prompt("Enter amount to scan & credit (₹):", "750");
+            if (custom === null) return;
+            const amount = parseFloat(custom);
+            if (isNaN(amount) || amount <= 0) {
+                showAlert("Please enter a valid amount!", "error");
+                return;
+            }
+            simulateGpayScan(amount);
+        }
+
+        function processScannerDeposit(targetAccNum, amount, description) {
+            const targetAcc = accounts.find(a => a.accountNumber === targetAccNum);
+            if (!targetAcc) {
+                showAlert("Target account not found!", "error");
+                return;
+            }
+
+            targetAcc.balance += amount;
+
+            const txnId = "UPI" + Math.floor(100000 + Math.random() * 900000);
+            const dateStr = new Date().toLocaleString('en-IN');
+
+            transactions.unshift({
+                id: txnId,
+                accountNumber: targetAcc.accountNumber,
+                type: "DEPOSIT",
+                amount: amount,
+                balanceAfter: targetAcc.balance,
+                date: dateStr,
+                partyAccount: "UPI / Google Pay",
+                partyName: "Google Pay QR Scanner",
+                partyRole: "SCANNER",
+                description: description || "Google Pay / Scanner Deposit"
+            });
+
+            // Automatically set this account as selected so user sees its updated stats!
+            selectedAccountNum = targetAcc.accountNumber;
+
+            saveAccounts();
+            saveTransactions();
+            renderAll();
+            playBeepSound();
+
+            showAlert(`🎉 Received ${formatCurrency(amount)} via ${description}! Credited into Account #${targetAcc.accountNumber}. New balance: ${formatCurrency(targetAcc.balance)}`, "success");
+        }
+
+        function generateGpayQR(event) {
+            event.preventDefault();
+
+            const accNum = document.getElementById('gpayAccount').value;
+            const amount = parseFloat(document.getElementById('gpayAmount').value);
+
+            if (!accNum) {
+                showAlert("Please select an account!", "error");
+                return;
+            }
+
+            if (isNaN(amount) || amount <= 0) {
+                showAlert("Please enter a valid amount!", "error");
+                return;
+            }
+
+            const acc = accounts.find(a => a.accountNumber === accNum);
+            if (!acc) {
+                showAlert("Account not found!", "error");
+                return;
+            }
+
+            const upiId = `${acc.name.toLowerCase().replace(/[^a-z]/g, '')}${acc.accountNumber}@manishbank`;
+            const upiString = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(acc.name)}&am=${amount}&cu=INR&tn=BankDeposit`;
+            const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(upiString)}`;
+
+            activeGpayData = {
+                accountNumber: acc.accountNumber,
+                accountName: acc.name,
+                amount: amount,
+                upiId: upiId
+            };
+
+            const qrImg = document.getElementById('gpayQrImage');
+            qrImg.src = qrApiUrl;
+            document.getElementById('qrAmountDisplay').textContent = formatCurrency(amount);
+            document.getElementById('qrUpiText').textContent = upiId;
+
+            document.getElementById('qrPlaceholder').style.display = 'none';
+            document.getElementById('qrActiveView').style.display = 'block';
+
+            showAlert(`⚡ Dynamic Google Pay QR generated for ${formatCurrency(amount)}!`, "info");
+        }
+
+        function simulateGPayCustomerPayment() {
+            if (!activeGpayData) {
+                showAlert("Please generate a QR code first!", "error");
+                return;
+            }
+
+            processScannerDeposit(
+                activeGpayData.accountNumber,
+                activeGpayData.amount,
+                `Customer GPay Scanned (${activeGpayData.upiId})`
+            );
+
+            // Reset dynamic view
+            document.getElementById('qrPlaceholder').style.display = 'block';
+            document.getElementById('qrActiveView').style.display = 'none';
+            document.getElementById('gpayGenerateForm').reset();
+            activeGpayData = null;
+        }
+
+        // ================= BOOTSTRAP APPLICATION =================
+        window.addEventListener('DOMContentLoaded', initApp);
+        initApp();
+    </script>
+</body>
+</html>
